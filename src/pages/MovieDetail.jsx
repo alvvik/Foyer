@@ -38,7 +38,7 @@ export default function MovieDetail() {
   if (isLoading) return <div>Trwa ładowanie strony...</div>;
   if (error) return <div>Wystąpił błąd...</div>;
   if (!movie) return null;
-  console.log(movie.images); // dodanie tego do galeri zdjec
+  console.log(movie.videos); // dodanie tego do galeri zdjec
   movie.images.backdrops.forEach((image) => {
     images = [
       ...images,
@@ -78,17 +78,24 @@ export default function MovieDetail() {
           </div>
 
           <div className="movie-sub-actions">
-            <button className="sub-action-btn">
-              <div className="sub-icon-container">🎬</div>
-              <span>Watch Trailer</span>
-            </button>
+            <a href={link} target="_blank">
+              <button className="sub-action-btn">
+                <div className="sub-icon-container">🎬</div>
+                <span>Watch Trailer</span>
+              </button>
+            </a>
 
             <button className="sub-action-btn">
               <div className="sub-icon-container">✔️</div>
               <span>Oznacz jako obejrzane</span>
             </button>
 
-            <button className="sub-action-btn">
+            <button
+              className="sub-action-btn"
+              onClick={async () => {
+                await navigator.clipboard.writeText(window.location.href);
+              }}
+            >
               <div className="sub-icon-container">📤</div>
               <span>Share This Movie</span>
             </button>
