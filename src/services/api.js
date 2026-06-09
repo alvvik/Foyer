@@ -18,11 +18,10 @@ export const callMovieDetails = async (id) => {
   const [resDetails, resImages, resVideos] = await Promise.all([
     fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`),
     fetch(`${BASE_URL}/movie/${id}/images?api_key=${API_KEY}`),
-    fetch(`${BASE_URL}/movie/${id}/videos?api_key=${API_KEY}`),
   ]);
   const details = await resDetails.json();
   const images = await resImages.json();
-  const videos = await resVideos.json();
-  return { details, images, videos };
+
+  return { details, images };
 };
 //https://api.themoviedb.org/3/movie/1057265?api_key=473c81fcac9ec776f750f5ef0fa52953

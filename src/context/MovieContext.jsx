@@ -7,15 +7,9 @@ export const useMovieContext = () => useContext(MovieContext);
 export const MovieProvider = ({ children }) => {
   const [favorites, setFavorites] = useState(() => {
     const storedFavs = localStorage.getItem("favorites");
-    // Zwracamy sparsowane dane lub pustą tablicę, jeśli nic nie ma w localStorage
+
     return storedFavs ? JSON.parse(storedFavs) : [];
   });
-
-  /* useEffect(() => {
-        const storedFavs = localStorage.getItem("favorites")
-
-        if (storedFavs) setFavorites(JSON.parse(storedFavs))
-    }, [])*/
 
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));

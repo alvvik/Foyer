@@ -13,6 +13,9 @@ export default function Navbar() {
         <Link to="/favorites" className="nav-link">
           Favorites
         </Link>
+        <Link to="/login" className="nav-link">
+          Log in
+        </Link>
       </div>
     </nav>
   );

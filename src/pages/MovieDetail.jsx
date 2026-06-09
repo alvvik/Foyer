@@ -38,7 +38,7 @@ export default function MovieDetail() {
   if (isLoading) return <div>Trwa ładowanie strony...</div>;
   if (error) return <div>Wystąpił błąd...</div>;
   if (!movie) return null;
-  console.log(movie.videos); // dodanie tego do galeri zdjec
+
   movie.images.backdrops.forEach((image) => {
     images = [
       ...images,
@@ -49,9 +49,9 @@ export default function MovieDetail() {
   });
   const genresText =
     movie.details?.genres?.map((g) => g.name).join(", ") || "None";
-
+  const link = `https://www.youtube.com/results?search_query=trailer+${movie.details.title}`;
   return (
-    <div className="movie-container">
+    <div className="movie-container ">
       <div className="movie-content">
         {/* Lewa kolumna z informacjami */}
         <div className="movie-details">
@@ -74,7 +74,7 @@ export default function MovieDetail() {
           </div>
 
           <div className="movie-actions">
-            <button className="btn-watchlist">Dodaj do Obserwowanych</button>
+            <button className="btn-watchlist">Add to watch list</button>
           </div>
 
           <div className="movie-sub-actions">
@@ -87,7 +87,7 @@ export default function MovieDetail() {
 
             <button className="sub-action-btn">
               <div className="sub-icon-container">✔️</div>
-              <span>Oznacz jako obejrzane</span>
+              <span>I have seen this before</span>
             </button>
 
             <button
@@ -110,6 +110,9 @@ export default function MovieDetail() {
             <ImageGallery ref={galleryRef} items={images} />
           </div>
         </div>
+      </div>
+      <div className="actors-div">
+        <div className="actor-card"></div>
       </div>
     </div>
   );

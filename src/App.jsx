@@ -1,13 +1,14 @@
 import "./css/App.css";
-import MovieCard from "./component/MovieCard";
+import MovieCard from "./components/MovieCard";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Favorite from "./pages/Favorites";
-import Navbar from "./component/NavBar";
+import Navbar from "./components/Navbar";
 import { MovieProvider } from "./context/MovieContext";
 import NotFound from "./pages/NotFound";
 import MovieDetail from "./pages/MovieDetail";
-
+import Footer from "./components/Footer";
+import AuthPage from "./pages/AuthPage";
 function App() {
   return (
     <MovieProvider>
@@ -19,8 +20,10 @@ function App() {
 
           <Route path="/movies/:id" element={<MovieDetail />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/login" element={<AuthPage />} />
         </Routes>
       </main>
+      <Footer></Footer>
     </MovieProvider>
   );
 }
