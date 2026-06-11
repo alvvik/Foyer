@@ -2,26 +2,25 @@ import { createContext, useContext, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updateProfile,
   getAuth,
 } from "firebase/auth";
 const AuthContext = createContext();
 
 export const useAuthContext = () => useContext(AuthContext);
 const authErrorTranslations = {
-  // --- REJESTRACJA (Web SDK) ---
   "auth/email-already-in-use":
-    "This email address is already registered to another account.", // zmiana z email-already-exists
+    "This email address is already registered to another account.",
   "auth/weak-password":
-    "The password is too weak. It must be at least 6 characters long.", // zmiana z invalid-password
+    "The password is too weak. It must be at least 6 characters long.",
   "auth/invalid-email": "The provided email address format is invalid.",
 
-  // --- LOGOWANIE (Web SDK) ---
   "auth/wrong-password": "Invalid email or password.",
   "auth/user-not-found": "Invalid email or password.",
-  "auth/invalid-credential": "Invalid email or password.", // Nowe wersje Firebase zwracają to dla złego hasła/maila
+  "auth/invalid-credential": "Invalid email or password.",
   "auth/user-disabled": "This account has been disabled by an administrator.",
 
-  // --- INNE ---
   "auth/too-many-requests": "Too many failed requests. Please try again later.",
 };
 export const AuthProvider = ({ children }) => {
@@ -29,7 +28,8 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const auth = getAuth();
-  const callApiRegisterUserWithEmail = async (email, password) => {
+
+  const callApiRegisterUserWithEmail = async (email, password, displayName) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -38,12 +38,13 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       );
+      await updateProfile(result.user, {
+        displayName: displayName,
+        
+      });
       setUser(result.user);
     } catch (error) {
-      setError(
-        authErrorTranslations[error.code] ||
-          "Invalid error code. Please try again",
-      );
+      setError(authErrorTranslations[error.code] || error.code);
     } finally {
       setIsLoading(null);
     }
@@ -54,6 +55,20 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       const result = await signInWithEmailAndPassword(auth, email, password);
       setUser(result.user);
+    } catch (error) {
+      setError(
+        authErrorTranslations[error.code] ||
+          "Something go wront. Please try again ",
+      );
+    } finally {
+      setIsLoading(null);
+    }
+  };
+  const callApiResetPassowrd = async (email) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const result = await sendPasswordResetEmail(auth, email);
     } catch (error) {
       setError(
         authErrorTranslations[error.code] ||
@@ -91,6 +106,7 @@ export const AuthProvider = ({ children }) => {
     isLoading: isLoading,
     callApiRegisterUserWithEmail,
     callApiLoginWithEmail,
+    callApiResetPassowrd,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

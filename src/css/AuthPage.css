@@ -152,3 +152,8 @@
 
   font-weight: bold;
 }
+.right {
+  display: block;
+  text-align: right;
+  margin: 1.25em 0;
+}
