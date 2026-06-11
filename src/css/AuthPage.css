@@ -2,11 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh; /* Centruje formularz w pionie na stronie */
+  min-height: 80vh;
   padding: 20px;
 }
 
-/* Karta formularza w stylu Dark Mode */
 .auth-card {
   background-color: #111217;
   color: rgba(255, 255, 255, 0.87);
@@ -24,6 +23,7 @@
   margin-bottom: 30px;
   letter-spacing: -0.5px;
   color: #ffffff;
+  text-align: center;
 }
 
 .auth-form {
@@ -52,7 +52,7 @@
 
 .forgot-link {
   font-size: 0.9rem;
-  color: #4361ee !important; /* Odnośnik pasujący do akcentów aplikacji */
+  color: #4361ee !important;
   text-decoration: none;
   font-weight: 500;
 }
@@ -61,7 +61,6 @@
   text-decoration: underline;
 }
 
-/* Styl dla ciemnych inputów */
 .input-group input {
   width: 100%;
   padding: 14px 16px;
@@ -74,7 +73,6 @@
   background-color: #161822;
 }
 
-/* Aktywny input (Focus) */
 .input-group input:focus {
   border-color: #4361ee;
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
@@ -90,7 +88,6 @@
   padding-right: 45px;
 }
 
-/* Przycisk pokazywania hasła (ikona oka) */
 .toggle-password {
   position: absolute;
   right: 12px;
@@ -107,7 +104,6 @@
   color: #a0a5c1;
 }
 
-/* Główny niebieski przycisk (Login now / Create account) */
 .btn-primary {
   width: 100%;
   background-color: #3b82f6 !important;
@@ -125,33 +121,6 @@
   background-color: #2563eb !important;
 }
 
-/* Przycisk logowania przez Google dla Dark Mode */
-.btn-google {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background-color: #1c1e2a !important;
-  color: #ffffff !important;
-  border: 1px solid #2a2d3d !important;
-  padding: 14px !important;
-  border-radius: 8px !important;
-  font-size: 0.95rem !important;
-  font-weight: 500 !important;
-  transition: background-color 0.2s ease !important;
-}
-
-.btn-google:hover {
-  background-color: #252838 !important;
-}
-
-.btn-google img {
-  width: 20px;
-  height: 20px;
-}
-
-/* Dolny tekst przełączający widoki */
 .auth-switch {
   display: flex;
   justify-content: center;
@@ -173,4 +142,13 @@
 
 .auth-switch button:hover {
   text-decoration: underline;
+}
+.error-container {
+  padding: 1em;
+  border: #e50914 1px solid;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 1.25rem;
+
+  font-weight: bold;
 }

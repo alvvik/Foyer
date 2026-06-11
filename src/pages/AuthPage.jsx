@@ -1,74 +1,119 @@
-import React, { useState } from "react";
-import "../css/AuthPage.css";
+import React, { useContext, useState } from "react";
+import { useAuthContext } from "../context/AuthContext";
+import { auth } from "../firebase";
 
+import "../css/AuthPage.css";
+import { Navigate } from "react-router-dom";
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [resetPassword, setResetPassword] = useState(false);
+  const {
+    callApiRegisterUserWithEmail,
+    callApiLoginWithEmail,
+    isLoading,
+    error,
+    user,
+  } = useAuthContext();
+  if (user) return <Navigate to="/" replace={true} />;
+  const handleSubmit = () => {
+    isLogin
+      ? callApiLoginWithEmail(email, password)
+      : callApiRegisterUserWithEmail(email, password);
+  };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>{isLogin ? "Login to your account" : "Create an account"}</h2>
+        {error && <div className="error-container">{error}</div>}
+        {isLogin ? <h2>Log in</h2> : <h2>Register</h2>}
 
         <form onSubmit={(e) => e.preventDefault()} className="auth-form">
           <div className="input-group">
             <label>Email</label>
-            <input type="email" placeholder="email@example.com" required />
+            <input
+              type="email"
+              placeholder="email@example.com"
+              required
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
+            />
           </div>
 
           <div className="input-group">
             <div className="label-row">
               <label>Password</label>
+
               {isLogin && (
                 <a href="#" className="forgot-link">
-                  Forgot ?
+                  Forgot password ?
                 </a>
               )}
             </div>
+
             <div className="password-wrapper">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 required
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
+
               <button
                 type="button"
                 className="toggle-password"
-                aria-label="Toggle password visibility"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
+                {showPassword ? (
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="icon-eye-closed"
+                  >
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                ) : (
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="icon-eye-open"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                )}
               </button>
             </div>
           </div>
 
-          <button type="submit" className="btn-primary">
-            {isLogin ? "Login now" : "Create account"}
-          </button>
-
-          <button type="button" className="btn-google">
-            <img
-              src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg"
-              alt="Google"
-            />
-            <span>Continue with Google</span>
+          <button type="submit" className="btn-primary" onClick={handleSubmit}>
+            {isLogin ? <>Log in</> : <>Create an account</>}
           </button>
         </form>
 
         <div className="auth-switch">
-          <span>
-            {isLogin ? "Don't have an account?" : "Already have an account?"}
-          </span>
           <button type="button" onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? "Sign up" : "Log in"}
+            {isLogin ? (
+              <>Create an new account</>
+            ) : (
+              <>Already have an account?</>
+            )}
           </button>
         </div>
       </div>

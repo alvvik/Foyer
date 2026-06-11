@@ -9,22 +9,25 @@ import NotFound from "./pages/NotFound";
 import MovieDetail from "./pages/MovieDetail";
 import Footer from "./components/Footer";
 import AuthPage from "./pages/AuthPage";
+import { AuthProvider } from "./context/AuthContext";
 function App() {
   return (
-    <MovieProvider>
-      <Navbar></Navbar>
-      <main className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/favorites" element={<Favorite />} />
+    <AuthProvider>
+      <MovieProvider>
+        <Navbar></Navbar>
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/favorites" element={<Favorite />} />
 
-          <Route path="/movies/:id" element={<MovieDetail />} />
-          <Route path="*" element={<NotFound />} />
-          <Route path="/login" element={<AuthPage />} />
-        </Routes>
-      </main>
-      <Footer></Footer>
-    </MovieProvider>
+            <Route path="/movies/:id" element={<MovieDetail />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/login" element={<AuthPage />} />
+          </Routes>
+        </main>
+        <Footer></Footer>
+      </MovieProvider>
+    </AuthProvider>
   );
 }
 
