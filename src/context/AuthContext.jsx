@@ -1,13 +1,18 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  browserLocalPersistence,
   updateProfile,
   getAuth,
+  onAuthStateChanged,
+  setPersistence,
+  signOut,
 } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 const AuthContext = createContext();
-
+import { db } from "../firebase";
 export const useAuthContext = () => useContext(AuthContext);
 const authErrorTranslations = {
   "auth/email-already-in-use":
@@ -29,7 +34,26 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(null);
   const auth = getAuth();
 
-  const callApiRegisterUserWithEmail = async (email, password, displayName) => {
+  useEffect(() => {
+    const initAuth = async () => {
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+      } catch (error) {
+        setError("Wystapil blad", error.code);
+        console.log(error);
+      }
+    };
+    initAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
+    return () => unsubscribe();
+  }, [auth]);
+  const callApiRegisterUserWithEmail = async (
+    email,
+    password,
+    firstName,
+    LastName,
+    userName,
+  ) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -38,11 +62,10 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       );
+      await addUserToDb(result.user, firstName, LastName, userName);
       await updateProfile(result.user, {
-        displayName: displayName,
-        
+        displayName: userName,
       });
-      setUser(result.user);
     } catch (error) {
       setError(authErrorTranslations[error.code] || error.code);
     } finally {
@@ -78,6 +101,30 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(null);
     }
   };
+  const callApiLogOut = async () => {
+    try {
+      signOut(auth);
+    } catch (error) {
+      console.log(error.code);
+    }
+  };
+
+  // Add a new document in collection "cities"
+  const addUserToDb = async (
+    user,
+    firstName = "",
+    lastName = "",
+    userName = "",
+    userPicture = "",
+  ) => {
+    await setDoc(doc(db, "users", user.uid), {
+      firstName: firstName,
+      lastName: lastName,
+      userName: userName,
+      userPicture: userPicture,
+    });
+  };
+
   /* const [favorites, setFavorites] = useState(() => {
     const storedFavs = localStorage.getItem("favorites");
 
@@ -107,6 +154,7 @@ export const AuthProvider = ({ children }) => {
     callApiRegisterUserWithEmail,
     callApiLoginWithEmail,
     callApiResetPassowrd,
+    callApiLogOut,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

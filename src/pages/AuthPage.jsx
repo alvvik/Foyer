@@ -27,7 +27,13 @@ export default function AuthPage() {
   const handleSubmit = () => {
     isLogin
       ? callApiLoginWithEmail(email, password)
-      : callApiRegisterUserWithEmail(email, password, userName);
+      : callApiRegisterUserWithEmail(
+          email,
+          password,
+          firstName,
+          lastName,
+          userName,
+        );
   };
   const handleResetPasswordLink = () => {
     callApiResetPassowrd(email);
