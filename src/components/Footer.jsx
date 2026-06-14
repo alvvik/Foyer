@@ -1,8 +1,46 @@
 import "../css/Footer.css";
-
+import { Link } from "react-router-dom";
 export default function Footer() {
   return (
-    <footer className="movie-footer">
+    <>
+      <footer className="bg-background-sec flex items-center pt-12 p-6 flex-col  justify-center  ">
+        <div className="flex  justify-around items-center">
+          <div className="w-1/2">
+            <h6 className="text-text font-bold text-3xl mb-4">
+              Foyer <span className="text-primary">.</span>
+            </h6>
+            <p className="w-1/3">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis
+              a corrupti labore voluptatibus dolores? Iste debitis ratione
+              laborum consequatur accusantium. Vel fugit facere quam deleniti
+              accusantium deserunt amet, molestias repellendus.
+            </p>
+          </div>
+          <div>
+            <p className="text-2xl font-bold mb-4">Useful Links</p>
+
+            <ul>
+              <li>
+                <Link to="/" className="nav-link">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link to="/favorites" className="nav-link">
+                  Favorites
+                </Link>
+              </li>
+              <li>
+                <Link to="/login">Login</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-6 p-4">
+          <p>&copy; {new Date().getFullYear()} Foyer. All rights reserved.</p>
+        </div>
+      </footer>
+      {/*  <footer className="movie-footer">
       <div className="footer-content">
         <div className="footer-logo">
           <span>Movie app</span>
@@ -43,6 +81,7 @@ export default function Footer() {
           </p>
         </div>
       </div>
-    </footer>
+    </footer>*/}
+    </>
   );
 }

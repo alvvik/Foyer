@@ -43,7 +43,21 @@ export default function Home() {
     loadPopularMovies();
   }, []);
   return (
-    <div className="home">
+    <>
+      <div className="bg-background ">
+        {error && <div className="">{error}</div>}
+        {loading ? (
+          <div className="loading">Loading...</div>
+        ) : (
+          <div className="grid grid-cols-5 gap-32 p-12">
+            {movies.map((movie) => (
+              <MovieCard movie={movie} key={movie.id} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/*   <div className="home">
       <form action="" onSubmit={handleSearch} className="search-form">
         <input
           type="text"
@@ -66,6 +80,7 @@ export default function Home() {
           ))}
         </div>
       )}
-    </div>
+    </div>*/}
+    </>
   );
 }

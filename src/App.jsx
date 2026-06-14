@@ -1,4 +1,4 @@
-import "./css/App.css";
+import "./css/index.css";
 import MovieCard from "./components/MovieCard";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -12,22 +12,26 @@ import AuthPage from "./pages/AuthPage";
 import { AuthProvider } from "./context/AuthContext";
 function App() {
   return (
-    <AuthProvider>
-      <MovieProvider>
-        <Navbar></Navbar>
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/favorites" element={<Favorite />} />
+    <>
+      <AuthProvider>
+        <MovieProvider>
+          <div className="text-text ">
+            <Navbar></Navbar>
+            <main>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/favorites" element={<Favorite />} />
 
-            <Route path="/movies/:id" element={<MovieDetail />} />
-            <Route path="*" element={<NotFound />} />
-            <Route path="/login" element={<AuthPage />} />
-          </Routes>
-        </main>
-        <Footer></Footer>
-      </MovieProvider>
-    </AuthProvider>
+                <Route path="/movies/:id" element={<MovieDetail />} />
+                <Route path="*" element={<NotFound />} />
+                <Route path="/login" element={<AuthPage />} />
+              </Routes>
+            </main>
+            <Footer></Footer>
+          </div>
+        </MovieProvider>
+      </AuthProvider>
+    </>
   );
 }
 
