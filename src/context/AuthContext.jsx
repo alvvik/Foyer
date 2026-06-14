@@ -30,7 +30,7 @@ const authErrorTranslations = {
 };
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+
   const [isLoading, setIsLoading] = useState(null);
   const auth = getAuth();
 
@@ -38,10 +38,7 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       try {
         await setPersistence(auth, browserLocalPersistence);
-      } catch (error) {
-        setError("Wystapil blad", error.code);
-        console.log(error);
-      }
+      } catch (error) {}
     };
     initAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
@@ -56,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   ) => {
     try {
       setIsLoading(true);
-      setError(null);
+
       const result = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -67,7 +64,7 @@ export const AuthProvider = ({ children }) => {
         displayName: userName,
       });
     } catch (error) {
-      setError(authErrorTranslations[error.code] || error.code);
+      //setError(authErrorTranslations[error.code] || error.code);
     } finally {
       setIsLoading(null);
     }
@@ -79,10 +76,10 @@ export const AuthProvider = ({ children }) => {
       const result = await signInWithEmailAndPassword(auth, email, password);
       setUser(result.user);
     } catch (error) {
-      setError(
+      /*  setError(
         authErrorTranslations[error.code] ||
           "Something go wront. Please try again ",
-      );
+      );*/
     } finally {
       setIsLoading(null);
     }
@@ -90,13 +87,13 @@ export const AuthProvider = ({ children }) => {
   const callApiResetPassowrd = async (email) => {
     try {
       setIsLoading(true);
-      setError(null);
+
       const result = await sendPasswordResetEmail(auth, email);
     } catch (error) {
-      setError(
+      /* setError(
         authErrorTranslations[error.code] ||
           "Something go wront. Please try again ",
-      );
+      );*/
     } finally {
       setIsLoading(null);
     }
@@ -149,7 +146,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user: user,
-    error: error,
+    //error: error,
     isLoading: isLoading,
     callApiRegisterUserWithEmail,
     callApiLoginWithEmail,

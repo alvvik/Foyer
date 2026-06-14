@@ -3,7 +3,7 @@ import { useMovieContext } from "../context/MovieContext";
 import MovieCard from "../components/MovieCard";
 export default function Favorites() {
   const { favorites } = useMovieContext();
-  if (favorites) {
+  if (favorites.length > 0) {
     return (
       <div className="favorites">
         <h2>Your Favotites</h2>

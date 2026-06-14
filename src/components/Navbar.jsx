@@ -5,28 +5,29 @@ import "../css/index.css";
 import { useEffect, useState } from "react";
 import MobileMenu from "./NavBar/MobileMenu";
 import DesktopMenu from "./NavBar/DesktopMenu";
-export default function Navbar() {
+import SearchBar from "./NavBar/SearchBar";
+export default function Navbar({
+  setSearchQuery,
+  searchQuery,
+  isLoading,
+  setIsLoading,
+}) {
   return (
     <>
       <nav className="bg-background-sec flex items-center p-6 px-12 justify-between flex-col xl:flex-row">
         <h1 className="text-text font-bold text-5xl">
-          Foyer <span className="text-primary">.</span>
+          <Link to="/">
+            {" "}
+            Foyer <span className="text-primary">.</span>
+          </Link>
         </h1>
         <div>
-          <form className="hidden xl:flex items-center  bg-background rounded-full p-1 shadow-inner frame-container w-3xl ">
-            <input
-              type="text"
-              placeholder="Search something here.."
-              className="w-full bg-transparent pl-6 pr-4 py-3 text-text placeholder:text-text/60 focus:outline-none text-base md:text-lg tracking-wide"
-            
-            />
-            <button
-              type="submit"
-              className="bg-primary/60 hover:bg-primary text-text font-medium px-8 py-3 rounded-full transition-colors duration-200 shadow-md active:scale-98 shrink-0"
-            >
-              Search
-            </button>
-          </form>
+          <SearchBar
+            setSearchQuery={setSearchQuery}
+            searchQuery={searchQuery}
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          ></SearchBar>
         </div>
         <div className="xl:hidden">
           <MobileMenu />

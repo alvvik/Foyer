@@ -10,13 +10,19 @@ import MovieDetail from "./pages/MovieDetail";
 import Footer from "./components/Footer";
 import AuthPage from "./pages/AuthPage";
 import { AuthProvider } from "./context/AuthContext";
+import { useState } from "react";
 function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <>
       <AuthProvider>
         <MovieProvider>
-          <div className="text-text ">
-            <Navbar></Navbar>
+          <div className="text-text">
+            <Navbar
+              setSearchQuery={setSearchQuery}
+              searchQuery={searchQuery}
+            ></Navbar>
             <main>
               <Routes>
                 <Route path="/" element={<Home />} />

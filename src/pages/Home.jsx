@@ -1,15 +1,11 @@
 import MovieCard from "../components/MovieCard";
-import { useState, useEffect } from "react";
 import "../css/Home.css";
-import { getPopularMovies, searchMovies } from "../services/api";
+import { useMovieContext } from "../context/MovieContext";
 export default function Home() {
-  //state
-  const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const { movies, isLoading, error } = useMovieContext();
+
   //search
-  const handleSearch = async (e) => {
+  /* const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
     if (loading) return;
@@ -26,27 +22,14 @@ export default function Home() {
       setLoading(false);
     }
   };
-
+  */
   //call api
-  useEffect(() => {
-    const loadPopularMovies = async () => {
-      try {
-        const popularMovies = await getPopularMovies();
-        setMovies(popularMovies);
-      } catch (err) {
-        setError(`Failded to load movies...`);
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadPopularMovies();
-  }, []);
+
   return (
     <>
       <div className="bg-background ">
         {error && <div className="">{error}</div>}
-        {loading ? (
+        {isLoading ? (
           <div className="loading">Loading...</div>
         ) : (
           <div className="grid grid-cols-5 gap-32 p-12">
