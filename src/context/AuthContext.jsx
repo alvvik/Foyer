@@ -32,6 +32,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const [isLoading, setIsLoading] = useState(null);
+  const [error, setError] = useState(null);
   const auth = getAuth();
 
   useEffect(() => {
@@ -48,23 +49,25 @@ export const AuthProvider = ({ children }) => {
     email,
     password,
     firstName,
-    LastName,
+    lastName,
     userName,
   ) => {
     try {
       setIsLoading(true);
+      setError(null);
 
       const result = await createUserWithEmailAndPassword(
         auth,
         email,
         password,
       );
-      await addUserToDb(result.user, firstName, LastName, userName);
+
+      await addUserToDb(result.user, firstName, lastName, userName);
       await updateProfile(result.user, {
         displayName: userName,
       });
     } catch (error) {
-      //setError(authErrorTranslations[error.code] || error.code);
+      setError(authErrorTranslations[error.code] || error.code);
     } finally {
       setIsLoading(null);
     }
@@ -75,11 +78,12 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       const result = await signInWithEmailAndPassword(auth, email, password);
       setUser(result.user);
+      console.log(user);
     } catch (error) {
-      /*  setError(
+      setError(
         authErrorTranslations[error.code] ||
-          "Something go wront. Please try again ",
-      );*/
+          "Something went wrong. Please try again.",
+      );
     } finally {
       setIsLoading(null);
     }
@@ -87,13 +91,14 @@ export const AuthProvider = ({ children }) => {
   const callApiResetPassowrd = async (email) => {
     try {
       setIsLoading(true);
+      setError(null);
 
-      const result = await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(auth, email);
     } catch (error) {
-      /* setError(
+      setError(
         authErrorTranslations[error.code] ||
-          "Something go wront. Please try again ",
-      );*/
+          "Something went wrong. Please try again.",
+      );
     } finally {
       setIsLoading(null);
     }
@@ -146,7 +151,7 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user: user,
-    //error: error,
+    error: error,
     isLoading: isLoading,
     callApiRegisterUserWithEmail,
     callApiLoginWithEmail,

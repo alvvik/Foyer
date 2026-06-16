@@ -6,6 +6,8 @@ import { useState } from "react";
 export default function DesktopMenu() {
   const { user, callApiLogOut } = useAuthContext();
   const [showMoreUser, setShowMoreUser] = useState(false);
+  console.log(user);
+
   return user ? (
     <div
       className="flex gap-2.5 relative cursor-pointer"
