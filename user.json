@@ -1,0 +1,25 @@
+{
+  "uid": "U4O6fZihz7fsLkgqZzLC6Zw6QNx2",
+  "email": "alvv2115@gmail.com",
+  "emailVerified": false,
+  "isAnonymous": false,
+  "providerData": [
+    {
+      "providerId": "password",
+      "uid": "alvv2115@gmail.com",
+      "displayName": null,
+      "email": "alvv2115@gmail.com",
+      "phoneNumber": null,
+      "photoURL": null
+    }
+  ],
+  "stsTokenManager": {
+    "refreshToken": "AMf-vBwN5-cG5-OBYNgrHdCdEVEDfYAy9QOSKybPIBYMiKT0DaSiM24PxBTTmAbNo_dSqy73SC-0j_FLv97EKDMsZEWRRBxlDAoA4ifY0g_BxORTH1hUrgLHLkCLxEqHKZArdCrYtqpHOg6wXC3pixdAyEjnmQVYg8v9Dwhub1wMWHB8lSIqvH_i_DibbkuWQ0zKQNURdo3xqxG05eNN9Q0AB_-NYsHPeA",
+    "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImVlOTA0NmVhZDJlMDUwMDAxMGVkNTA0M2I0ODNkODRiMGM1MmM3YzQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY2luZW1hYXBwLTU1Mjc3IiwiYXVkIjoiY2luZW1hYXBwLTU1Mjc3IiwiYXV0aF90aW1lIjoxNzgxNjQyNjUzLCJ1c2VyX2lkIjoiVTRPNmZaaWh6N2ZzTGtncVp6TEM2Wnc2UU54MiIsInN1YiI6IlU0TzZmWmloejdmc0xrZ3FaekxDNlp3NlFOeDIiLCJpYXQiOjE3ODE2NDI2NTMsImV4cCI6MTc4MTY0NjI1MywiZW1haWwiOiJhbHZ2MjExNUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiYWx2djIxMTVAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.yzazZh2m8j3vBGVXHO-utRI1dxGY0TFHrneGifmTNKYmuqQ3wmKNQ3pyOISq8XDf8E3TDJCLRok92r3r8T1ZfaFWL5FsirBQSCGNvUmeWUCqld5bD5GAUMjVv161GbYNjxA4jOFrFKmHBL0KN0FchwC-ao9Lm0-adpDo65grXJOXQItkjN2YTt0Uiuu4VxlamxkJS8ZjyVzOPTzVUhNAfj3n4SgGrCaqR2tNE7VQJhKrrKW4g7IEArvwKpXbmcJJTSJAuYEuyGulDfamgSBwSoAXoRofvclf1Rs7XMSv70O-O6Q_CX38-OOOm6dPhQvzRL97kzJWhMGW5rqy-O69pg",
+    "expirationTime": 1781646251291
+  },
+  "createdAt": "1781625525825",
+  "lastLoginAt": "1781642653864",
+  "apiKey": "AIzaSyCxNT6oDy1l_6xOnaWPO4NMnPYzKCN_Tmw",
+  "appName": "[DEFAULT]"
+}

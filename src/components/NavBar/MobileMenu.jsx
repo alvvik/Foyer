@@ -6,7 +6,7 @@ export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const { user, callApiLogOut } = useAuthContext();
   return (
-    <nav className="relative flex items-center justify-between p-4  w-full">
+    <nav className="relative flex items-center justify-center p-4  w-full ">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden text-2xl z-50"
@@ -15,13 +15,13 @@ export default function MobileMenu() {
       </button>
 
       <ul
-        className={`absolute top-full left-0 w-full bg-background transition-all duration-300 md:static md:flex md:w-auto z-40 ${
+        className={`absolute top-full rounded-2xl text-center left-0 w-full ring-1 ring-primary bg-background transition-all duration-300 md:static md:flex md:w-auto z-40 md:rounded-2xl ${
           isOpen
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-4 pointer-events-none md:pointer-events-auto md:opacity-100 md:translate-y-0"
         }`}
       >
-        <li>
+        <li className="">
           <Link
             to="/"
             className="block p-4 hover:bg-gray-800/20"

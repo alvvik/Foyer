@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 
-import "../css/index.css";
-
 import { useEffect, useState } from "react";
 import MobileMenu from "./NavBar/MobileMenu";
 import DesktopMenu from "./NavBar/DesktopMenu";
@@ -29,7 +27,7 @@ export default function Navbar({
             setIsLoading={setIsLoading}
           ></SearchBar>
         </div>
-        <div className="xl:hidden">
+        <div className="xl:hidden w-full relative">
           <MobileMenu />
         </div>
         <div className=" hidden xl:flex">
