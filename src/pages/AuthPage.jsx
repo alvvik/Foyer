@@ -44,11 +44,15 @@ export default function AuthPage() {
     callApiResetPassowrd(email);
   };
   return (
-    <div className="md:flex justify-center  md:items-center md:p-24 ">
-      <div className="bg-background p-8 pb-12 md:p-12 ">
+    <div className="md:flex justify-center   md:items-center md:p-24  bg-background/90">
+      <div
+        className="bg-background  p-8 pb-12 md:p-12 md:rounded-2xl md:ring-1 ring-primary shadow-primary
+
+ "
+      >
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-center md:text-5xl ">
-            Foyer <span className="text-primary">.</span>
+            Foyer <span className=" text-primary">.</span>
           </h1>
         </div>
         <form
@@ -155,7 +159,7 @@ export default function AuthPage() {
           <div className="flex justify-center">
             <input
               type="submit"
-              className="px-8 py-2 bg-primary text-center w-3/4 rounded-2xl font-bold my-2"
+              className="px-8 py-2 bg-primary text-center w-3/4rounded-2xl font-bold my-2"
               value={
                 resetPassword
                   ? "Send password reset link"
