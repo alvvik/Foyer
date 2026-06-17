@@ -4,26 +4,8 @@ import { useMovieContext } from "../context/MovieContext";
 export default function Home() {
   const { movies, isLoading, error } = useMovieContext();
 
-  //search
-  /* const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-    if (loading) return;
-    setLoading(true);
-    try {
-      const searchResult = await searchMovies(searchQuery);
-      setMovies(searchResult);
-      setError(null);
-    } catch (err) {
-      console.log(err);
-
-      setError(`Failed to search movies...`);
-    } finally {
-      setLoading(false);
-    }
-  };
-  */
-  //call api
+  
+    
 
   return (
     <>
@@ -32,7 +14,7 @@ export default function Home() {
         {isLoading ? (
           <div className="loading"></div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-32 p-12">
+          <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-32 p-12">
             {movies.map((movie) => (
               <MovieCard movie={movie} key={movie.id} />
             ))}
@@ -40,30 +22,7 @@ export default function Home() {
         )}
       </div>
 
-      {/*   <div className="home">
-      <form action="" onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          placeholder="Search for movies..."
-          className="search-input"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type="submit" className="search-button">
-          Search
-        </button>
-      </form>
-      {error && <div className="error-message">{error}</div>}
-      {loading ? (
-        <div className="loading">Loading...</div>
-      ) : (
-        <div className="movies-grid">
-          {movies.map((movie) => (
-            <MovieCard movie={movie} key={movie.id} />
-          ))}
-        </div>
-      )}
-    </div>*/}
+      {}
     </>
   );
 }

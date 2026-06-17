@@ -111,7 +111,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Add a new document in collection "cities"
+  
   const addUserToDb = async (
     user,
     firstName = "",
@@ -127,28 +127,7 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  /* const [favorites, setFavorites] = useState(() => {
-    const storedFavs = localStorage.getItem("favorites");
-
-    return storedFavs ? JSON.parse(storedFavs) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
-  const addToFavorites = (movie) => {
-    setFavorites([...favorites, movie]);
-  };
-
-  const removeFromFavorites = (movieId) => {
-    setFavorites((prev) => prev.filter((movie) => movie.id !== movieId));
-  };
-
-  const isFavorite = (movieId) => {
-    return favorites.some((movie) => movie.id === movieId);
-  };
-*/
-
+  
   const value = {
     user: user,
     error: error,

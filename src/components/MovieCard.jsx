@@ -13,7 +13,7 @@ export default function MovieCard({ movie }) {
 
   return (
     <div className="group relative flex flex-col h-full overflow-hidden rounded-lg bg-[#1a1a1a] text-[0.9rem] transition-transform duration-200 ease-in-out hover:-translate-y-[5px] md:text-base">
-      {/* Kontener plakatu (.movie-poster) */}
+    
       <div className="relative aspect-[2/3] w-full">
         <img
           className="h-full w-full object-cover"
@@ -21,11 +21,11 @@ export default function MovieCard({ movie }) {
           alt={movie.title}
         />
 
-        {/* Nakładka (.movie-overlay) */}
+   
         <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-b from-black/10 to-black/80 p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <button
             className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-[1.2rem] transition-colors duration-200 hover:bg-black/80 md:h-10 md:w-10 md:text-2xl ${
-              favorite ? "text-[#ff4757]" : "text-white"
+              favorite ? "text-red-500" : "text-white"
             }`}
             onClick={onFavoriteClick}
           >
@@ -34,22 +34,22 @@ export default function MovieCard({ movie }) {
         </div>
       </div>
 
-      {/* Informacje o filmie (.movie-info) */}
+    
       <div className="bg-background-sec flex flex-1 flex-col gap-2 p-3 md:p-4">
         <div>
-          <h3 className="m-0 text-base font-semibold text-white">
+          <h3 className="m-0 text-base font-semibold text-text">
             {movie.title}
           </h3>
-          <p className="text-[0.9rem] text-[#999]">
+          <p>
             {movie.release_date?.split("-")[0]}
           </p>
         </div>
 
-        {/* Widok "Więcej" (.view-more) */}
-        <div className="mt-auto flex flex-row items-center justify-around text-[0.9rem] text-[#ffd700]">
+       
+        <div className="mt-auto flex flex-row items-center justify-around text-[0.9rem] text-yellow-300">
           <div>⭐ {movie.vote_average.toFixed(2)}</div>
           <div>
-            <button className="bg-[#0a192f] text-white px-3 py-1.5 rounded transition-colors hover:bg-[#0f2444]">
+            <button className="bg-background-sec text-white px-3 py-1.5 rounded transition-colors hover:bg-background-sec/60">
               <Link to={`/movies/${movie.id}`}>See more</Link>
             </button>
           </div>

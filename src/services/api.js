@@ -24,4 +24,4 @@ export const callMovieDetails = async (id) => {
 
   return { details, images };
 };
-//https://api.themoviedb.org/3/movie/1057265?api_key=473c81fcac9ec776f750f5ef0fa52953
+

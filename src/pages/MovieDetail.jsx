@@ -6,6 +6,7 @@ import { callMovieDetails } from "../services/api";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/image-gallery.css";
 import MobileMovieDetail from "../components/MovieDetail/MobileMovieDetail";
+import DesktopMobileDetail from "../components/MovieDetail/DesktopMovieDetail";
 
 export default function MovieDetail() {
   const { id } = useParams();
@@ -52,80 +53,16 @@ export default function MovieDetail() {
     movie.details?.genres?.map((g) => g.name).join(", ") || "None";
   const link = `https://www.youtube.com/results?search_query=trailer+${movie.details.title}`;
   return (
-    <div>
+    <div className="bg-background">
       <div className="lg:hidden">
         <MobileMovieDetail
-          img={movie.details.backdrop_path}
+          movie={movie}
         ></MobileMovieDetail>
       </div>
-
-      {/*  
-    
-     <div className="movie-container ">
-      <div className="movie-content">
-        
-        <div className="movie-details">
-          <h1 className="movie-title">{movie.details?.title}</h1>
-
-          <div className="movie-meta">
-            <span className="meta-item">
-              {movie.details?.release_date?.replaceAll("-", " ")}
-            </span>
-
-            <span className="meta-item">{movie.details?.runtime} min</span>
-
-            <span className="meta-item">{genresText}</span>
-          </div>
-
-          <div className="movie-ratings">
-            <div className="rating-item">
-              ⭐ {movie.details?.vote_average?.toFixed(2)}
-            </div>
-          </div>
-
-          <div className="movie-actions">
-            <button className="btn-watchlist">Add to watch list</button>
-          </div>
-
-          <div className="movie-sub-actions">
-            <a href={link} target="_blank">
-              <button className="sub-action-btn">
-                <div className="sub-icon-container">🎬</div>
-                <span>Watch Trailer</span>
-              </button>
-            </a>
-
-            <button className="sub-action-btn">
-              <div className="sub-icon-container">✔️</div>
-              <span>I have seen this before</span>
-            </button>
-
-            <button
-              className="sub-action-btn"
-              onClick={async () => {
-                await navigator.clipboard.writeText(window.location.href);
-              }}
-            >
-              <div className="sub-icon-container">📤</div>
-              <span>Share This Movie</span>
-            </button>
-          </div>
-
-          <p className="movie-description">{movie.details?.overview}</p>
-        </div>
-
-      
-        <div className="movie-media">
-          <div className="card-image">
-            <ImageGallery ref={galleryRef} items={images} />
-          </div>
-        </div>
+      <div className="sm:hidden lg:block">
+      <DesktopMobileDetail movie={movie}></DesktopMobileDetail>
       </div>
-      <div className="actors-div">
-        <div className="actor-card"></div>
-      </div>
-    </div>
-    */}
+      {}
     </div>
   );
 }

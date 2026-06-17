@@ -70,14 +70,7 @@ export default function AuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
               />
-              {/*  <input
-                type="email"
-                placeholder="Your email"
-                required
-                className="w-full pl-10 pr-10 py-3  focus:outline-0 ring-1 ring-primary focus:shadow-primary focus:ring-2 rounded  "
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-              />*/}
+              {}
               <UserRound className="absolute left-3 text-primary pointer-events-none" />
             </div>
             {!resetPassword && !isLogin && (

@@ -5,14 +5,14 @@
 - change favorites from localstorage to account
 - make watch later button work
 - add to watch list button work
-- (partly) change all css and transform to tailwind framework
+- (DONE IG) change all css and transform to tailwind framework
 
 - add edit profile
 - add settings
-- (DONE ) replace svg and pngs icons with https://lucide.dev/icons/ (specialy in auth)
+- (DONE ) replace svg and pngs icons with https:
 - ( DONE )MAKE AUTH PAGE WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (AND CLEAN CODE BC ITS SO SHIT)
 - (DONE)- add edit profile, logout button in navbar
 - (DONE) add that login is constant and is not logout after refreshing website
 - (DONE) add md and xl authpage
 
-- (WORKING ON) add movie detail tailwind
+- (DONE) add movie detail tailwind
