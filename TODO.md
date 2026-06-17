@@ -16,3 +16,4 @@
 - (DONE) add md and xl authpage
 
 - (DONE) add movie detail tailwind
+- add not found page
