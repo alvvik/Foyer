@@ -17,3 +17,4 @@
 
 - (DONE) add movie detail tailwind
 - add not found page
+- add ai chatbot in corner
