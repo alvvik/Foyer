@@ -16,5 +16,5 @@
 - (DONE) add md and xl authpage
 
 - (DONE) add movie detail tailwind
-- add not found page
+- (DONE) add not found page
 - add ai chatbot in corner

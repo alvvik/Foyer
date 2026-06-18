@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, Settings } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
 import anonymousUser from "../../assets/anonymousUser.png";
 import { useState } from "react";
+import { LogOut } from "lucide-react";
 
 export default function DesktopMenu() {
   const { user, callApiLogOut } = useAuthContext();
@@ -18,29 +19,33 @@ export default function DesktopMenu() {
         <span className="font-bold text-xl">{user.displayName}</span>
       </div>
       <div className="ring-4 ring-primary rounded-full">
-        <img src={user?.photoUrl ?? anonymousUser} alt="" sizes="25px" />
+        <img
+          src={user?.photoUrl ?? anonymousUser}
+          alt={`${user.displayName} profile picture`}
+          sizes="25px"
+        />
       </div>
       {showMoreUser && (
-        <div className=" absolute top-16 z-50">
-          <ul className="  ring-1 ring-primary bg-background">
-            <li className="py-2 px-12 font-semibold cursor-pointer hover:bg-background-sec/50 hover:transition-all">
-              Edit profile
-            </li>
-            <li className="py-2 px-12 font-semibold cursor-pointer hover:bg-background-sec/50 hover:transition-all">
-              Settings
-            </li>
-            <li className="py-2 px-12 font-semibold cursor-pointer hover:bg-background-sec/50 hover:transition-all">
-              <Link
-                to="/"
-                onClick={() => {
-                  setShowMoreUser((prev) => !prev);
-                  callApiLogOut();
-                }}
-              >
-                Log out
-              </Link>
-            </li>
-          </ul>
+        <div className=" absolute top-full right-0 mt-2 z-50 "  >
+          <div className="rounded-2xl ring-1 bg-background  ring-primary">
+            <div>
+              <img
+                src={user?.photoUrl ?? anonymousUser}
+                alt={`${user.displayName} profile picture`}
+                sizes="25px"
+              />
+              <p>{user.displayName}</p>
+            </div>
+            <ul>
+              <li>
+                {" "}
+                <Settings /> Account
+              </li>
+              <li>
+                <LogOut /> Log out
+              </li>
+            </ul>
+          </div>
         </div>
       )}
     </div>
