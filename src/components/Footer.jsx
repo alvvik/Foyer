@@ -20,23 +20,17 @@ export default function Footer() {
 
             <ul className="text-center">
               <li>
-                <a>
-                  <Link to="/" className="nav-link">
-                    Home
-                  </Link>
-                </a>
+                <Link to="/" className="nav-link">
+                  Home
+                </Link>
               </li>
               <li>
-                <a>
-                  <Link to="/favorites" className="nav-link">
-                    Favorites
-                  </Link>
-                </a>
+                <Link to="/favorites" className="nav-link">
+                  Favorites
+                </Link>
               </li>
               <li>
-                <a>
-                  <Link to="/login">Login</Link>
-                </a>
+                <Link to="/login">Login</Link>
               </li>
             </ul>
           </div>

@@ -11,40 +11,51 @@ import {
   signOut,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-const AuthContext = createContext();
 import { db } from "../firebase";
+
+const AuthContext = createContext();
 export const useAuthContext = () => useContext(AuthContext);
+
+const auth = getAuth();
+
 const authErrorTranslations = {
   "auth/email-already-in-use":
     "This email address is already registered to another account.",
   "auth/weak-password":
     "The password is too weak. It must be at least 6 characters long.",
   "auth/invalid-email": "The provided email address format is invalid.",
-
   "auth/wrong-password": "Invalid email or password.",
   "auth/user-not-found": "Invalid email or password.",
   "auth/invalid-credential": "Invalid email or password.",
   "auth/user-disabled": "This account has been disabled by an administrator.",
-
   "auth/too-many-requests": "Too many failed requests. Please try again later.",
 };
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const [isLoading, setIsLoading] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const auth = getAuth();
 
   useEffect(() => {
     const initAuth = async () => {
       try {
         await setPersistence(auth, browserLocalPersistence);
-      } catch (error) {}
+      } catch (error) {
+        console.error("Persistence error:", error);
+      }
     };
     initAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
+
+    // onAuthStateChanged sam w sobie pilnuje aktualnego użytkownika
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setIsLoading(false);
+    });
+
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
+
   const callApiRegisterUserWithEmail = async (
     email,
     password,
@@ -61,38 +72,37 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       );
-
       await addUserToDb(result.user, firstName, lastName, userName);
-      await updateProfile(result.user, {
-        displayName: userName,
-      });
+      await updateProfile(result.user, { displayName: userName });
+
+      setUser({ ...result.user, displayName: userName });
     } catch (error) {
       setError(authErrorTranslations[error.code] || error.code);
     } finally {
-      setIsLoading(null);
+      setIsLoading(false);
     }
   };
+
   const callApiLoginWithEmail = async (email, password) => {
     try {
       setIsLoading(true);
       setError(null);
       const result = await signInWithEmailAndPassword(auth, email, password);
       setUser(result.user);
-      console.log(user);
     } catch (error) {
       setError(
         authErrorTranslations[error.code] ||
           "Something went wrong. Please try again.",
       );
     } finally {
-      setIsLoading(null);
+      setIsLoading(false);
     }
   };
+
   const callApiResetPassowrd = async (email) => {
     try {
       setIsLoading(true);
       setError(null);
-
       await sendPasswordResetEmail(auth, email);
     } catch (error) {
       setError(
@@ -100,18 +110,22 @@ export const AuthProvider = ({ children }) => {
           "Something went wrong. Please try again.",
       );
     } finally {
-      setIsLoading(null);
-    }
-  };
-  const callApiLogOut = async () => {
-    try {
-      signOut(auth);
-    } catch (error) {
-      console.log(error.code);
+      setIsLoading(false);
     }
   };
 
-  
+  const callApiLogOut = async () => {
+    try {
+      setIsLoading(true);
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.log(error.code);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const addUserToDb = async (
     user,
     firstName = "",
@@ -120,18 +134,17 @@ export const AuthProvider = ({ children }) => {
     userPicture = "",
   ) => {
     await setDoc(doc(db, "users", user.uid), {
-      firstName: firstName,
-      lastName: lastName,
-      userName: userName,
-      userPicture: userPicture,
+      firstName,
+      lastName,
+      userName,
+      userPicture,
     });
   };
 
-  
   const value = {
-    user: user,
-    error: error,
-    isLoading: isLoading,
+    user,
+    error,
+    isLoading,
     callApiRegisterUserWithEmail,
     callApiLoginWithEmail,
     callApiResetPassowrd,

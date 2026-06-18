@@ -44,7 +44,7 @@ export default function AuthPage() {
     callApiResetPassowrd(email);
   };
   return (
-    <div className="md:flex justify-center   md:items-center md:p-24  bg-background/90">
+    <div className="md:flex justify-center   md:items-center md:p-24  bg-background/90 ">
       <div
         className="bg-background  p-8 pb-12 md:p-12 md:rounded-2xl md:ring-1 ring-primary shadow-primary
 
