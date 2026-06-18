@@ -11,6 +11,8 @@ import Footer from "./components/Footer";
 import AuthPage from "./pages/AuthPage";
 import { AuthProvider } from "./context/AuthContext";
 import { useState } from "react";
+import Settings from "./pages/Settings";
+import ProtectedRoute from "./services/ProtectedRoute";
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -26,11 +28,14 @@ function App() {
             <main>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/favorites" element={<Favorite />} />
 
                 <Route path="/movies/:id" element={<MovieDetail />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/login" element={<AuthPage />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/favorites" element={<Favorite />} />
+                  <Route path="/settings" element={<Settings />} />
+                </Route>
               </Routes>
             </main>
             <Footer></Footer>

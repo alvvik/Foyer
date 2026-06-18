@@ -10,7 +10,7 @@ import {
   setPersistence,
   signOut,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const AuthContext = createContext();
@@ -33,7 +33,7 @@ const authErrorTranslations = {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-
+  const [dbData, setDbData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -47,10 +47,30 @@ export const AuthProvider = ({ children }) => {
     };
     initAuth();
 
-    // onAuthStateChanged sam w sobie pilnuje aktualnego użytkownika
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setIsLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+      try {
+        const docRef = doc(db, "users", firebaseUser.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUser({
+            uid: firebaseUser.uid,
+            displayName: firebaseUser.displayName,
+            ...docSnap.data(),
+          });
+        } else {
+          setUser(firebaseUser);
+        }
+      } catch (err) {
+        console.error("Błąd pobierania profilu z bazy (częste w Brave):", err);
+        setUser(firebaseUser);
+      } finally {
+        setIsLoading(false);
+      }
     });
 
     return () => unsubscribe();
@@ -72,13 +92,11 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       );
-      await addUserToDb(result.user, firstName, lastName, userName);
-      await updateProfile(result.user, { displayName: userName });
 
-      setUser({ ...result.user, displayName: userName });
+      await addUserToDb(result.user, email, firstName, lastName, userName);
+      await updateProfile(result.user, { displayName: userName });
     } catch (error) {
       setError(authErrorTranslations[error.code] || error.code);
-    } finally {
       setIsLoading(false);
     }
   };
@@ -87,14 +105,12 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       setError(null);
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      setUser(result.user);
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       setError(
         authErrorTranslations[error.code] ||
           "Something went wrong. Please try again.",
       );
-    } finally {
       setIsLoading(false);
     }
   };
@@ -118,26 +134,28 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       await signOut(auth);
-      setUser(null);
     } catch (error) {
-      console.log(error.code);
-    } finally {
+      console.error("Logout error:", error.code);
       setIsLoading(false);
     }
   };
 
   const addUserToDb = async (
     user,
+    email = "",
     firstName = "",
     lastName = "",
     userName = "",
     userPicture = "",
+    theme = "dark",
   ) => {
     await setDoc(doc(db, "users", user.uid), {
+      email,
       firstName,
       lastName,
       userName,
       userPicture,
+      theme,
     });
   };
 

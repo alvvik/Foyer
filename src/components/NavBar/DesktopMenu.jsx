@@ -8,7 +8,7 @@ export default function DesktopMenu() {
   const { user, callApiLogOut } = useAuthContext();
   const [showMoreUser, setShowMoreUser] = useState(false);
   const navigate = useNavigate();
-  console.log(user);
+ 
 
   const handleLogout = async (e) => {
     e.preventDefault();
@@ -65,7 +65,8 @@ export default function DesktopMenu() {
                 className="py-2 hover:text-primary hover:scale-105 flex gap-2 active:scale-90 transition-all cursor-pointer"
                 onClick={() => setShowMoreUser(false)}
               >
-                <Settings className="inline-block "/> Account
+                <Link to="/settings">
+                <Settings className="inline-block "/> Account</Link>
               </li>
               <li 
                 className="py-2 hover:text-primary hover:scale-105 flex gap-2 active:scale-90 transition-all cursor-pointer"
