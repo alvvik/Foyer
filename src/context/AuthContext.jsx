@@ -53,20 +53,23 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
         return;
       }
+
+      // 2. Dane z bazy Firestore dociągamy w tle (asynchronicznie)
       try {
         const docRef = doc(db, "users", firebaseUser.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setUser({
             uid: firebaseUser.uid,
-            displayName: firebaseUser.displayName,
+            displayName: firebaseUser.displayName || docSnap.data().userName,
             ...docSnap.data(),
           });
         } else {
           setUser(firebaseUser);
         }
       } catch (err) {
-        console.error("Błąd pobierania profilu z bazy (częste w Brave):", err);
+        console.error("Błąd pobierania profilu z bazy:", err);
+        // W razie błędu sieci/Brave i tak logujemy usera z podstawowymi danymi Auth
         setUser(firebaseUser);
       } finally {
         setIsLoading(false);
