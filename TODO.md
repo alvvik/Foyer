@@ -6,7 +6,7 @@
 - make watch later button work
 - add to watch list button work
 - (DONE IG) change all css and transform to tailwind framework
-
+- add better mobile menu
 - add edit profile
 - add settings
 - (DONE ) replace svg and pngs icons with https:

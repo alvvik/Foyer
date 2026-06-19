@@ -61,12 +61,15 @@ export default function AuthPage() {
 
             handleSubmit();
           }}
+          data-bitwarden-no-filtering
         >
           <div className="flex justify-center flex-col gap-8">
             <div className="relative flex items-center w-full  hover:-translate-y-2 hover:transition-all active:transition-all ">
               <Input
                 type="email"
                 placeholder="Your email"
+                name="email"
+                autoComplete="email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
               />
@@ -79,6 +82,7 @@ export default function AuthPage() {
                   <div className="relative flex items-center w-full hover:-translate-y-2 hover:transition-all active:transition-all">
                     <Input
                       placeholder="First name"
+                      autoComplete="given-name"
                       onChange={(e) => setFirstName(e.target.value)}
                       value={firstName}
                     />
@@ -89,6 +93,7 @@ export default function AuthPage() {
                   <div className="relative flex items-center w-full hover:-translate-y-2 hover:transition-all active:transition-all">
                     <Input
                       placeholder="Last name"
+                      autoComplete="family-name"
                       className="w-full pl-10 pr-10 py-3 focus:outline-0 ring-1 ring-primary focus:shadow-primary focus:ring-2 rounded"
                       onChange={(e) => setLastName(e.target.value)}
                       value={lastName}
@@ -100,6 +105,7 @@ export default function AuthPage() {
                   <div className="relative flex items-center w-full hover:-translate-y-2 hover:transition-all active:transition-all">
                     <Input
                       placeholder="Username"
+                      autoComplete="username"
                       className="w-full pl-10 pr-10 py-3 focus:outline-0 ring-1 ring-primary focus:shadow-primary focus:ring-2 rounded"
                       onChange={(e) => setUserName(e.target.value)}
                       value={userName}
