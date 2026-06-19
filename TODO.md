@@ -7,7 +7,7 @@
 - add to watch list button work
 - (DONE IG) change all css and transform to tailwind framework
 - add better mobile menu
-- add edit profile
+- (PARTLY) add edit profile
 - add settings
 - (DONE ) replace svg and pngs icons with https:
 - ( DONE )MAKE AUTH PAGE WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (AND CLEAN CODE BC ITS SO SHIT)

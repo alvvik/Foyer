@@ -1,15 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthContext } from "../context/AuthContext";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { getInitials } from "../utils/userUtils";
 
 export default function Settings() {
-  const { user } = useAuthContext();
+  // Pobieramy user oraz dbData z kontekstu autoryzacji
+  const { user, dbData, editProfile } = useAuthContext();
 
   const [profilePic, setProfilePic] = useState("");
   const [theme, setTheme] = useState("dark");
-  const [userData, setUser] = useState(user);
-  
+
+  // Inicjalizujemy pusty stan formularza, żeby uniknąć błędów o "uncontrolled input"
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    userName: "", // Zmienione z displayName na userName, zgodnie z strukturą bazy
+    email: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  // Kiedy dane z kontekstu (Auth i Firestore) się załadują, aktualizujemy stan formularza
+  useEffect(() => {
+    if (user || dbData) {
+      setFormData((prev) => ({
+        ...prev,
+        firstName: dbData?.firstName || "",
+        lastName: dbData?.lastName || "",
+        userName: dbData?.userName || user?.displayName || "", // Dopasowane do userName
+        email: user?.email || "",
+      }));
+
+      // Jeśli użytkownik ma już zapisane zdjęcie w bazie, ustawiamy je w podglądzie
+      if (dbData?.photoURL) {
+        setProfilePic(dbData.photoURL);
+      }
+    }
+  }, [user, dbData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,14 +48,31 @@ export default function Settings() {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setProfilePic(imageUrl);
+      // Wskazówka: W tym miejscu w przyszłości dodasz wysyłanie pliku do Firebase Storage,
+      // a pobrany URL z serwera przypiszesz do stanu bazy danych.
     }
   };
 
   const removeProfilePic = () => {
-    setProfilePic(null);
+    setProfilePic("");
   };
 
-  /* return (
+  const handleSave = async (e) => {
+    e.preventDefault();
+    console.log("Zapisywanie danych:", formData);
+
+    // POPRAWKA: Przekazujemy dane jako JEDEN OBIEKT {} wewnątrz funkcji
+    // Zamieniliśmy też displayName na userName
+    await editProfile({
+      email: formData.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      userName: formData.userName,
+      photoURL: profilePic,
+    });
+  };
+
+  return (
     <div className="min-h-screen bg-background text-text p-6 md:p-12 font-sans antialiased">
       <div className="max-w-3xl mx-auto bg-background-sec rounded-lg border border-sec/10 p-6 md:p-8 shadow-xl">
         <header className="mb-8 border-b border-sec/10 pb-4">
@@ -41,7 +85,7 @@ export default function Settings() {
           </p>
         </header>
 
-        <div className="space-y-8">
+        <form onSubmit={handleSave} className="space-y-8">
           <section>
             <h2 className="text-base font-medium mb-4 text-text">
               Profile Picture
@@ -56,8 +100,7 @@ export default function Settings() {
                   />
                 ) : (
                   <span className="text-xl font-bold text-sec">
-                    {formData.firstName[0]}
-                    {formData.lastName[0]}
+                    {getInitials(formData.firstName, formData.lastName)}
                   </span>
                 )}
               </div>
@@ -73,6 +116,7 @@ export default function Settings() {
                 </label>
                 {profilePic && (
                   <button
+                    type="button"
                     onClick={removeProfilePic}
                     className="text-xs font-medium bg-transparent px-4 py-2.5 rounded text-sec hover:text-text border border-transparent transition-colors"
                   >
@@ -116,12 +160,12 @@ export default function Settings() {
               </div>
               <div className="sm:col-span-2">
                 <label className="block text-xs font-medium text-sec mb-1 uppercase tracking-wider">
-                  Display Name
+                  Username
                 </label>
                 <input
                   type="text"
-                  name="displayName"
-                  value={formData.displayName}
+                  name="userName" // Zmieniono nazwę pola
+                  value={formData.userName}
                   onChange={handleInputChange}
                   className="w-full bg-background border border-sec/30 rounded px-3 py-2 text-sm text-text focus:outline-none focus:border-primary transition-colors"
                 />
@@ -149,12 +193,14 @@ export default function Settings() {
             </h2>
             <div className="grid grid-cols-2 gap-4 max-w-sm">
               <button
+                type="button"
                 onClick={() => setTheme("light")}
                 className={`flex items-center justify-center space-x-2 p-3 rounded border text-sm font-medium transition-all ${theme === "light" ? "border-primary bg-background text-primary" : "border-sec/30 bg-background/40 text-sec hover:text-text"}`}
               >
                 <span>Light Mode</span>
               </button>
               <button
+                type="button"
                 onClick={() => setTheme("dark")}
                 className={`flex items-center justify-center space-x-2 p-3 rounded border text-sm font-medium transition-all ${theme === "dark" ? "border-primary bg-background text-primary" : "border-sec/30 bg-background/40 text-sec hover:text-text"}`}
               >
@@ -212,15 +258,21 @@ export default function Settings() {
           </section>
 
           <div className="flex justify-end space-x-4 pt-4 border-t border-sec/10">
-            <button className="px-5 py-2 text-sm font-medium text-sec hover:text-text transition-colors">
+            <button
+              type="button"
+              className="px-5 py-2 text-sm font-medium text-sec hover:text-text transition-colors"
+            >
               Cancel
             </button>
-            <button className="px-6 py-2 text-sm font-medium bg-primary text-background-sec rounded shadow-md hover:opacity-90 transition-opacity">
+            <button
+              type="submit"
+              className="px-6 py-2 text-sm font-medium bg-primary text-background-sec rounded shadow-md hover:opacity-90 transition-opacity"
+            >
               Save Settings
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-  );*/
+  );
 }

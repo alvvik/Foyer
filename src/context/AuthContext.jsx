@@ -10,7 +10,7 @@ import {
   setPersistence,
   signOut,
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const AuthContext = createContext();
@@ -20,7 +20,7 @@ const auth = getAuth();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [dbData, setDbData] = useState(null); // Osobny stan na dane z Firestore!
+  const [dbData, setDbData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -34,7 +34,6 @@ export const AuthProvider = ({ children }) => {
     };
     initAuth();
 
-    // Słuchacz sesji zajmuje się WYŁĄCZNIE kontem Firebase, nie dotyka obiektów
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (!firebaseUser) {
         setUser(null);
@@ -43,12 +42,9 @@ export const AuthProvider = ({ children }) => {
         return;
       }
 
-      // Ustawiamy TYLKO czysty obiekt Firebase i natychmiast wyłączamy loader.
-      // To daje 100% gwarancji, że strona przestanie wisieć!
       setUser(firebaseUser);
       setIsLoading(false);
 
-      // Dane z Firestore dociągamy bezpiecznie obok
       try {
         const docRef = doc(db, "users", firebaseUser.uid);
         const docSnap = await getDoc(docRef);
@@ -74,6 +70,47 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const callApiRegisterUserWithEmail = async (
+    email,
+    password,
+    firstName,
+    lastName,
+    userName,
+  ) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // 1. Rejestracja użytkownika w Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const firebaseUser = userCredential.user;
+
+      await updateProfile(firebaseUser, {
+        displayName: userName,
+        photoURL: "",
+      });
+
+      // 3. Zapis dodatkowych danych do Firestore do kolekcji "users"
+      await setDoc(doc(db, "users", firebaseUser.uid), {
+        uid: firebaseUser.uid,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        userName: userName,
+        photoURL: photoURL || "",
+        createdAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Błąd podczas rejestracji:", error);
+      setError(error.message || "Wystąpił błąd podczas rejestracji.");
+      setIsLoading(false);
+    }
+  };
+
   const callApiLogOut = async () => {
     try {
       setIsLoading(true);
@@ -84,14 +121,58 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Przekazujemy oba stany do aplikacji
+  const editProfile = async ({
+    email,
+    firstName,
+    lastName,
+    userName,
+    photoURL,
+  }) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      if (!auth.currentUser) throw new Error("Użytkownik nie jest zalogowany.");
+
+      // Aktualizacja profilu Firebase Auth
+      await updateProfile(auth.currentUser, {
+        displayName: userName || auth.currentUser.displayName,
+        photoURL: photoURL || auth.currentUser.photoURL || "",
+      });
+
+      // Aktualizacja Firestore (zabezpieczenie przed undefined za pomocą operatora || "")
+      const docRef = doc(db, "users", auth.currentUser.uid);
+      await updateDoc(docRef, {
+        email: email || dbData?.email || "",
+        firstName: firstName || "",
+        lastName: lastName || "",
+        userName: userName || "",
+        photoURL: photoURL || "",
+      });
+
+      // Pobranie świeżych danych do stanu aplikacji
+      const updatedSnap = await getDoc(docRef);
+      if (updatedSnap.exists()) {
+        setDbData(updatedSnap.data());
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Błąd podczas edycji profilu:", error);
+      setError(error.message || "Nie udało się zaktualizować profilu.");
+      setIsLoading(false);
+    }
+  };
+  // Przekazujemy oba stany oraz nową funkcję rejestracji do aplikacji
   const value = {
     user,
     dbData,
     isLoading,
     error,
     callApiLoginWithEmail,
+    callApiRegisterUserWithEmail, // <--- Dodane tutaj
     callApiLogOut,
+    editProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -30,11 +30,11 @@ export default function DesktopMenu() {
                 {user.displayName}
               </span>
             </div>
-            <div className="ring-4 ring-primary rounded-full overflow-hidden w-10 h-10 flex items-center justify-center">
+            <div className="ring-2 p-2 ring-primary rounded-full overflow-hidden w-12 h-12 flex items-center justify-center">
               <img
                 src={user?.photoUrl ?? anonymousUser}
                 alt="profile"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover "
               />
             </div>
           </PopoverButton>
@@ -48,7 +48,7 @@ export default function DesktopMenu() {
                 <img
                   src={user?.photoUrl ?? anonymousUser}
                   alt="profile"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover p-2"
                 />
               </div>
               <p className="font-semibold text-center">{user.displayName}</p>
