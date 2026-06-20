@@ -1,20 +1,22 @@
-# TODO
+## TODO
 
-- (PARTLY) implement firebase db and add there user first name, last name and later theme
-- (DONE) add switchable theme
-- change favorites from localstorage to account
-- make watch later button work
-- add to watch list button work
-- (DONE IG) change all css and transform to tailwind framework
-- add better mobile menu
-- (PARTLY) add edit profile
-- add settings
-- (DONE ) replace svg and pngs icons with https:
-- ( DONE )MAKE AUTH PAGE WORK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (AND CLEAN CODE BC ITS SO SHIT)
-- (DONE)- add edit profile, logout button in navbar
-- (DONE) add that login is constant and is not logout after refreshing website
-- (DONE) add md and xl authpage
+- [ ] Move favorites from localstorage to Firebase account
+- [ ] Better mobile menu
+- [ ] AI chatbot in the corner
+- [ ] "Watch later" and "Watch list" buttons (Firebase logic)
+- [ ] add Mobie providers in movie detail (mobile and desktop)
 
-- (DONE) add movie detail tailwind
-- (DONE) add not found page
-- add ai chatbot in corner
+## In Progress
+
+- [ ] Edit profile (complete backend/saving logic)
+
+## Done
+
+- [x] MAKE AUTH PAGE WORK + clean code
+- [x] Transform all CSS to Tailwind framework
+- [x] Persistent login (keeps session after refreshing website)
+- [x] Add switchable theme
+- [x] Add edit profile, logout button in navbar
+- [x] Add movie detail view in Tailwind
+- [x] Add not found page
+- [x] Replace SVG and PNG icons with https links

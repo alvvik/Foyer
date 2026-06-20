@@ -12,8 +12,8 @@ export default function MovieCard({ movie }) {
   }
 
   return (
-    <div className="group relative flex flex-col h-full overflow-hidden rounded-lg bg-background-sec text-[0.9rem] transition-transform duration-200 ease-in-out hover:-translate-y-[5px] md:text-base ">
-      <div className="relative aspect-[2/3] w-full">
+    <div className="group relative flex flex-col h-full overflow-hidden rounded-lg bg-background-sec text-[0.9rem] transition-transform duration-200 ease-in-out hover:-translate-y-1.25 md:text-base ">
+      <div className="relative aspect-2/3 w-full">
         <img
           className="h-full w-full object-cover"
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
@@ -21,7 +21,7 @@ export default function MovieCard({ movie }) {
           loading="lazy"
         />
 
-        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-b from-black/10 to-black/80 p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <div className="absolute inset-0 flex flex-col justify-end bg-linear-to-b from-black/10 to-black/80 p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           <button
             className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-[1.2rem] transition-colors duration-200 hover:bg-black/80 md:h-10 md:w-10 md:text-2xl ${
               favorite ? "text-red-500" : "text-white"
