@@ -13,14 +13,16 @@ import { AuthProvider } from "./context/AuthContext";
 import { useState } from "react";
 import Settings from "./pages/Settings";
 import ProtectedRoute from "./services/ProtectedRoute";
+import { ThemeProvider, useThemeContext } from "./context/ThemeContext";
+
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const { isDarkMode } = useThemeContext();
   return (
     <>
       <AuthProvider>
         <MovieProvider>
-          <div className="text-text">
+          <div className={`text-text bg-background min-h-screen `}>
             <Navbar
               setSearchQuery={setSearchQuery}
               searchQuery={searchQuery}

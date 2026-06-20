@@ -189,30 +189,6 @@ export default function Settings() {
 
           <section>
             <h2 className="text-base font-medium mb-4 text-text">
-              Interface Theme
-            </h2>
-            <div className="grid grid-cols-2 gap-4 max-w-sm">
-              <button
-                type="button"
-                onClick={() => setTheme("light")}
-                className={`flex items-center justify-center space-x-2 p-3 rounded border text-sm font-medium transition-all ${theme === "light" ? "border-primary bg-background text-primary" : "border-sec/30 bg-background/40 text-sec hover:text-text"}`}
-              >
-                <span>Light Mode</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setTheme("dark")}
-                className={`flex items-center justify-center space-x-2 p-3 rounded border text-sm font-medium transition-all ${theme === "dark" ? "border-primary bg-background text-primary" : "border-sec/30 bg-background/40 text-sec hover:text-text"}`}
-              >
-                <span>Dark Mode</span>
-              </button>
-            </div>
-          </section>
-
-          <hr className="border-sec/10" />
-
-          <section>
-            <h2 className="text-base font-medium mb-4 text-text">
               Change Password
             </h2>
             <div className="space-y-4">

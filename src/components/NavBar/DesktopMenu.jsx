@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
 import anonymousUser from "../../assets/anonymousUser.png";
 import { LogOut, Settings } from "lucide-react";
+import ThemeSwitch from "./ThemeSwitch";
 
 export default function DesktopMenu() {
   const { user, callApiLogOut, dbData } = useAuthContext();
@@ -41,7 +42,7 @@ export default function DesktopMenu() {
 
           <PopoverPanel
             anchor="bottom end"
-            className="mt-3 z-[9999] min-w-[200px] rounded-2xl ring-1 bg-background text-text ring-primary p-6 shadow-xl focus:outline-none"
+            className="mt-3 z-9999 min-w-50 rounded-2xl ring-1 bg-background text-text ring-primary p-6 shadow-xl focus:outline-none"
           >
             <div className="flex flex-col justify-center items-center gap-2">
               <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary">
@@ -78,6 +79,7 @@ export default function DesktopMenu() {
                   <span>Log out</span>
                 </div>
               </li>
+              <ThemeSwitch />
             </ul>
           </PopoverPanel>
         </>

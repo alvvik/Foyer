@@ -1,7 +1,7 @@
 # TODO
 
 - (PARTLY) implement firebase db and add there user first name, last name and later theme
-- add switchable theme
+- (DONE) add switchable theme
 - change favorites from localstorage to account
 - make watch later button work
 - add to watch list button work

@@ -12,7 +12,7 @@ export default function Navbar({
 }) {
   return (
     <>
-      <nav className="bg-background-sec flex items-center p-6 px-12 justify-between flex-col xl:flex-row">
+      <nav className="bg-background-sec  flex items-center p-6 px-12 justify-between flex-col xl:flex-row">
         <h1 className="text-text font-bold text-5xl">
           <Link to="/">
             {" "}

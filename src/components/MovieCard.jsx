@@ -12,7 +12,7 @@ export default function MovieCard({ movie }) {
   }
 
   return (
-    <div className="group relative flex flex-col h-full overflow-hidden rounded-lg bg-[#1a1a1a] text-[0.9rem] transition-transform duration-200 ease-in-out hover:-translate-y-[5px] md:text-base">
+    <div className="group relative flex flex-col h-full overflow-hidden rounded-lg bg-background-sec text-[0.9rem] transition-transform duration-200 ease-in-out hover:-translate-y-[5px] md:text-base ">
       <div className="relative aspect-[2/3] w-full">
         <img
           className="h-full w-full object-cover"
@@ -44,7 +44,7 @@ export default function MovieCard({ movie }) {
         <div className="mt-auto flex flex-row items-center justify-around text-[0.9rem] text-yellow-300">
           <div>⭐ {movie.vote_average.toFixed(2)}</div>
           <div>
-            <button className="bg-background-sec text-white px-3 py-1.5 rounded transition-colors hover:bg-background-sec/60">
+            <button className="bg-sec text-text px-3 py-1.5 rounded transition-colors hover:bg-sec/60">
               <Link to={`/movies/${movie.id}`}>See more</Link>
             </button>
           </div>

@@ -1,8 +1,23 @@
 @import "tailwindcss";
+
+:root {
+  --bg: #23313f;
+  --bg-sec: #1b2634;
+  --primary: #21e08b;
+  --sec: #515863;
+  --text: #fff;
+}
+.light {
+  --bg: #ffffff; /* Główne tło - czysta, świeża biel */
+  --bg-sec: #f4f6f8; /* Tło sekcji/kart - jasny, chłodny szary dla głębi */
+  --primary: #19bc73; /* Główny akcent - nieco ciemniejsza, czytelna zieleń */
+  --sec: #707e94; /* Kolor pomocniczy - stonowany szary na obramowania/ikony */
+  --text: #1b2634; /* Tekst - bardzo ciemny granat (Twój stary --bg-sec) zamiast czerni */
+}
 @theme {
-  --color-background: #23313f;
-  --color-background-sec: #1b2634;
-  --color-primary: #21e08b;
-  --color-sec: #515863;
-  --color-text: #fff;
+  --color-background: var(--bg);
+  --color-background-sec: var(--bg-sec);
+  --color-primary: var(--primary);
+  --color-sec: var(--sec);
+  --color-text: var(--text);
 }
