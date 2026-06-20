@@ -9,6 +9,9 @@ import {
   onAuthStateChanged,
   setPersistence,
   signOut,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
@@ -127,7 +130,19 @@ export const AuthProvider = ({ children }) => {
     lastName,
     userName,
     photoURL,
+    currentPassword,
+    newPassword,
+    confirmPassword,
+    currentTimestamp,
   }) => {
+    if (newPassword)
+      await changePassword({
+        email,
+        newPassword,
+        currentPassword,
+        confirmPassword,
+      });
+
     try {
       setIsLoading(true);
       setError(null);
@@ -148,6 +163,7 @@ export const AuthProvider = ({ children }) => {
         lastName: lastName || "",
         userName: userName || "",
         photoURL: photoURL || "",
+        lastUpdate: currentTimestamp,
       });
 
       // Pobranie świeżych danych do stanu aplikacji
@@ -160,6 +176,28 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Błąd podczas edycji profilu:", error);
       setError(error.message || "Nie udało się zaktualizować profilu.");
+      setIsLoading(false);
+    }
+  };
+  const changePassword = async ({
+    email,
+    newPassword,
+    currentPassword,
+    confirmPassword,
+  }) => {
+    if (newPassword !== confirmPassword) {
+      throw new Error("Write same passwords!");
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const credential = EmailAuthProvider.credential(email, currentPassword);
+      await reauthenticateWithCredential(auth.currentUser, credential);
+      await updatePassword(auth.currentUser, newPassword);
+    } catch (error) {
+      setError(error);
+      console.log(error);
+    } finally {
       setIsLoading(false);
     }
   };

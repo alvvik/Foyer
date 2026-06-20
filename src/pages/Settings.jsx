@@ -69,6 +69,10 @@ export default function Settings() {
       lastName: formData.lastName,
       userName: formData.userName,
       photoURL: profilePic,
+      currentPassword: formData.currentPassword,
+      newPassword: formData.newPassword,
+      confirmPassword: formData.confirmPassword,
+      currentTimestamp: new Date(),
     });
   };
 
