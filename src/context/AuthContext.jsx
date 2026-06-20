@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  sendPasswordResetEmail,
   browserLocalPersistence,
   updateProfile,
   getAuth,
@@ -12,6 +11,7 @@ import {
   updatePassword,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  updateEmail,
 } from "firebase/auth";
 import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
@@ -53,6 +53,12 @@ export const AuthProvider = ({ children }) => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           setDbData(docSnap.data());
+
+          // BONUS: Jeśli email w Firebase Auth zmienił się (użytkownik kliknął link),
+          // a w Firestore jest stary, zaktualizuj go automatycznie tutaj!
+          if (docSnap.data().email !== firebaseUser.email) {
+            await updateDoc(docRef, { email: firebaseUser.email });
+          }
         }
       } catch (err) {
         console.error("Błąd pobierania Firestore:", err);
@@ -69,6 +75,7 @@ export const AuthProvider = ({ children }) => {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       setError("Invalid email or password.");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -84,7 +91,6 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       setError(null);
 
-      // 1. Rejestracja użytkownika w Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -97,19 +103,19 @@ export const AuthProvider = ({ children }) => {
         photoURL: "",
       });
 
-      // 3. Zapis dodatkowych danych do Firestore do kolekcji "users"
       await setDoc(doc(db, "users", firebaseUser.uid), {
         uid: firebaseUser.uid,
         email: email,
         firstName: firstName,
         lastName: lastName,
         userName: userName,
-        photoURL: photoURL || "",
+        photoURL: "", // NAPRAWIONE: Usunięto nieistniejącą zmienną photoURL
         createdAt: new Date().toISOString(),
       });
     } catch (error) {
       console.error("Błąd podczas rejestracji:", error);
       setError(error.message || "Wystąpił błąd podczas rejestracji.");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -120,10 +126,32 @@ export const AuthProvider = ({ children }) => {
       await signOut(auth);
     } catch (error) {
       console.error(error);
+    } finally {
       setIsLoading(false);
     }
   };
 
+  const changePassword = async ({ newPassword, confirmPassword }) => {
+    if (newPassword !== confirmPassword) {
+      throw new Error("Passwords do not match!");
+    }
+    await updatePassword(auth.currentUser, newPassword);
+  };
+
+  const changeEmail = async ({ email }) => {
+    if (email === auth.currentUser.email) {
+      throw new Error("Wpisz inny adres email.");
+    }
+
+    try {
+      // Zmienia email natychmiast w bazie Firebase Auth, bez wysyłania linków!
+      await updateEmail(auth.currentUser, email);
+      console.log("Email zmieniony pomyślnie!");
+    } catch (error) {
+      console.error("Błąd podczas bezpośredniej zmiany email:", error);
+      throw error;
+    }
+  };
   const editProfile = async ({
     email,
     firstName,
@@ -135,30 +163,51 @@ export const AuthProvider = ({ children }) => {
     confirmPassword,
     currentTimestamp,
   }) => {
-    if (newPassword)
-      await changePassword({
-        email,
-        newPassword,
-        currentPassword,
-        confirmPassword,
-      });
-
     try {
       setIsLoading(true);
       setError(null);
 
       if (!auth.currentUser) throw new Error("Użytkownik nie jest zalogowany.");
 
-      // Aktualizacja profilu Firebase Auth
+      // Reautentykacja (wymagana dla zmiany maila/hasła)
+      if (newPassword || (email && email !== auth.currentUser.email)) {
+        if (!currentPassword) throw new Error("Enter your current password!");
+        const credential = EmailAuthProvider.credential(
+          auth.currentUser.email,
+          currentPassword,
+        );
+        await reauthenticateWithCredential(auth.currentUser, credential);
+      }
+
+      // Zmiana hasła
+      if (newPassword) {
+        await changePassword({ newPassword, confirmPassword });
+      }
+
+      // Zmiana adresu email
+      let emailVerifying = false;
+      if (email && email !== auth.currentUser.email) {
+        await changeEmail({ email });
+        emailVerifying = true;
+        // Informujemy użytkownika, że musi sprawdzić skrzynkę
+        setError(
+          "Zgłoszenie zmiany email przyjęte. Sprawdź nową skrzynkę pocztową, aby potwierdzić.",
+        );
+      }
+
+      // Aktualizacja profilu Firebase Auth (display name i photo)
       await updateProfile(auth.currentUser, {
         displayName: userName || auth.currentUser.displayName,
         photoURL: photoURL || auth.currentUser.photoURL || "",
       });
 
-      // Aktualizacja Firestore (zabezpieczenie przed undefined za pomocą operatora || "")
+      // Aktualizacja danych w Firestore
       const docRef = doc(db, "users", auth.currentUser.uid);
       await updateDoc(docRef, {
-        email: email || dbData?.email || "",
+        // Ważne: Zapisujemy stary email z auth, dopóki nowy nie zostanie zweryfikowany kliknięciem w link!
+        email: emailVerifying
+          ? auth.currentUser.email
+          : email || dbData?.email || "",
         firstName: firstName || "",
         lastName: lastName || "",
         userName: userName || "",
@@ -166,49 +215,25 @@ export const AuthProvider = ({ children }) => {
         lastUpdate: currentTimestamp,
       });
 
-      // Pobranie świeżych danych do stanu aplikacji
       const updatedSnap = await getDoc(docRef);
       if (updatedSnap.exists()) {
         setDbData(updatedSnap.data());
       }
-
-      setIsLoading(false);
     } catch (error) {
       console.error("Błąd podczas edycji profilu:", error);
       setError(error.message || "Nie udało się zaktualizować profilu.");
-      setIsLoading(false);
-    }
-  };
-  const changePassword = async ({
-    email,
-    newPassword,
-    currentPassword,
-    confirmPassword,
-  }) => {
-    if (newPassword !== confirmPassword) {
-      throw new Error("Write same passwords!");
-      return;
-    }
-    try {
-      setIsLoading(true);
-      const credential = EmailAuthProvider.credential(email, currentPassword);
-      await reauthenticateWithCredential(auth.currentUser, credential);
-      await updatePassword(auth.currentUser, newPassword);
-    } catch (error) {
-      setError(error);
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
   };
-  // Przekazujemy oba stany oraz nową funkcję rejestracji do aplikacji
+
   const value = {
     user,
     dbData,
     isLoading,
     error,
     callApiLoginWithEmail,
-    callApiRegisterUserWithEmail, // <--- Dodane tutaj
+    callApiRegisterUserWithEmail,
     callApiLogOut,
     editProfile,
   };
