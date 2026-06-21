@@ -6,6 +6,11 @@
   --primary: #21e08b;
   --sec: #515863;
   --text: #fff;
+  --toastify-color-success: var(--primary);
+  --toastify-color-error: #ef4444;
+  --toastify-color-info: #3b82f6;
+  --toastify-text-color-light: var(--text);
+  --toastify-color-light: var(--bg-sec);
 }
 .light {
   --bg: #ffffff; /* Główne tło - czysta, świeża biel */

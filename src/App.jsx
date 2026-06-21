@@ -14,7 +14,7 @@ import { useState } from "react";
 import Settings from "./pages/Settings";
 import ProtectedRoute from "./services/ProtectedRoute";
 import { ThemeProvider, useThemeContext } from "./context/ThemeContext";
-
+import { ToastContainer } from "react-toastify";
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const { isDarkMode } = useThemeContext();
@@ -30,6 +30,7 @@ function App() {
               ></Navbar>
             </div>
             <main>
+              <ToastContainer />
               <Routes>
                 <Route path="/" element={<Home />} />
 
