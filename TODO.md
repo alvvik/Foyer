@@ -6,8 +6,11 @@
 - [ ] "Watch later" and "Watch list" buttons (Firebase logic)
 - [ ] add Mobie providers in movie detail (mobile and desktop)
 - [ ] add toasts after actions
+- [ ] add toast call after actions
 
 ## In Progress
+
+- [ ] doing toasts
 
 ## Done
 
