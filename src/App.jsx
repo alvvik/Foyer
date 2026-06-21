@@ -22,11 +22,13 @@ function App() {
     <>
       <AuthProvider>
         <MovieProvider>
-          <div className={`text-text bg-background min-h-screen `}>
-            <Navbar
-              setSearchQuery={setSearchQuery}
-              searchQuery={searchQuery}
-            ></Navbar>
+          <div className={`text-text bg-background min-h-screen relative `}>
+            <div className="sticky top-0 z-50">
+              <Navbar
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
+              ></Navbar>
+            </div>
             <main>
               <Routes>
                 <Route path="/" element={<Home />} />

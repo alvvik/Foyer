@@ -4,7 +4,7 @@ import { auth } from "../firebase";
 import { UserRound, AtSign, Lock, Eye, EyeOff } from "lucide-react";
 
 import { Navigate } from "react-router-dom";
-import Input from "../components/AuthPage/Input";
+import Input from "../components/Input";
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);

@@ -1,58 +1,77 @@
-import { useState } from "react";
+import { Popover } from "@headlessui/react";
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
+import ThemeSwitch from "./ThemeSwitch";
 
 export default function MobileMenu() {
-  const [isOpen, setIsOpen] = useState(false);
   const { user, callApiLogOut } = useAuthContext();
+
   return (
-    <nav className="relative flex items-center justify-center p-4  w-full ">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden text-2xl z-50"
-      >
-        {isOpen ? "✕" : "☰"}
-      </button>
+    <Popover
+      as="nav"
+      className="relative flex items-center justify-center p-4 w-full"
+    >
+      {({ open, close }) => (
+        <>
+          <Popover.Button className="md:hidden text-2xl z-50 focus:outline-none">
+            {open ? "✕" : "☰"}
+          </Popover.Button>
 
-      <ul
-        className={`absolute top-full rounded-2xl text-center left-0 w-full ring-1 ring-primary bg-background transition-all duration-300 md:static md:flex md:w-auto z-40 md:rounded-2xl ${
-          isOpen
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-4 pointer-events-none md:pointer-events-auto md:opacity-100 md:translate-y-0"
-        }`}
-      >
-        <li className="">
-          <Link
-            to="/"
-            className="block p-4 hover:bg-gray-800/20"
-            onClick={() => setIsOpen(false)}
+          {/* 
+            Właściwość 'static' jest tutaj kluczowa! 
+            Wymusza ona wyrenderowanie elementu w DOM nawet gdy Popover jest zamknięty.
+            Dzięki temu Twoje klasy 'md:opacity-100' i 'md:translate-y-0' 
+            zadziałają na desktopie, zapobiegając zniknięciu menu.
+          */}
+          <Popover.Panel
+            static
+            as="ul"
+            className={`absolute top-full rounded-2xl text-center left-0 w-full ring-1 ring-primary bg-background transition-all duration-300 md:static md:flex md:w-auto z-40 md:rounded-2xl ${
+              open
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-4 pointer-events-none md:pointer-events-auto md:opacity-100 md:translate-y-0"
+            }`}
           >
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/favorites"
-            className="block p-4 hover:bg-gray-800/20"
-            onClick={() => setIsOpen(false)}
-          >
-            Favorites
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            to={user ? "/" : "/login"}
-            className="block p-4 hover:bg-gray-800/20"
-            onClick={() => {
-              setIsOpen(false);
-              if (user) callApiLogOut();
-            }}
-          >
-            {user ? "Log out" : "Log in"}
-          </Link>
-        </li>
-      </ul>
-    </nav>
+            <li>
+              <Link
+                to="/"
+                className="block p-4 hover:bg-gray-800/20"
+                onClick={() => close()}
+              >
+                Home
+              </Link>
+            </li>
+            {user && (
+              <>
+                <li>
+                  <Link
+                    to="/settings"
+                    className="block p-4 hover:bg-gray-800/20"
+                    onClick={() => close()}
+                  >
+                    Manage account
+                  </Link>
+                </li>
+              </>
+            )}
+            <li className="flex justify-center items-center">
+              <ThemeSwitch />
+            </li>
+            <li>
+              <Link
+                to={user ? "/" : "/login"}
+                className="block p-4 hover:bg-gray-800/20"
+                onClick={() => {
+                  close();
+                  if (user) callApiLogOut();
+                }}
+              >
+                {user ? "Log out" : "Log in"}
+              </Link>
+            </li>
+          </Popover.Panel>
+        </>
+      )}
+    </Popover>
   );
 }
