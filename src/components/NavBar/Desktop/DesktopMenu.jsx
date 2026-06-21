@@ -1,10 +1,10 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../context/AuthContext";
-import anonymousUser from "../../assets/anonymousUser.png";
+import { useAuthContext } from "../../../context/AuthContext";
+import anonymousUser from "../../../assets/anonymousUser.png";
 import { LogOut, Settings } from "lucide-react";
-import ThemeSwitch from "./ThemeSwitch";
-
+import ThemeSwitch from "../ThemeSwitch";
+import { getInitials } from "../../../utils/userUtils";
 export default function DesktopMenu() {
   const { user, callApiLogOut, dbData } = useAuthContext();
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export default function DesktopMenu() {
       console.error("Błąd wylogowania:", error);
     }
   };
-
+  const initials = getInitials(dbData?.firstName, dbData?.lastName);
   return user ? (
     <Popover className="relative ">
       {({ close }) => (
@@ -32,11 +32,15 @@ export default function DesktopMenu() {
               </span>
             </div>
             <div className="ring-2 p-2 ring-primary rounded-full overflow-hidden w-12 h-12 flex items-center justify-center">
-              <img
-                src={user?.photoUrl ?? anonymousUser}
-                alt="profile"
-                className="w-full h-full object-cover "
-              />
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-xl font-bold text-sec ">{initials}</span>
+              )}
             </div>
           </PopoverButton>
 
@@ -45,12 +49,18 @@ export default function DesktopMenu() {
             className="mt-3 z-9999 min-w-50 rounded-2xl ring-1 bg-background text-text ring-primary p-6 shadow-xl focus:outline-none"
           >
             <div className="flex flex-col justify-center items-center gap-2">
-              <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary">
-                <img
-                  src={user?.photoUrl ?? anonymousUser}
-                  alt="profile"
-                  className="w-full h-full object-cover p-2"
-                />
+              <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary flex items-center justify-center">
+                {user.photoURL ? (
+                  <img
+                    src={user.photoURL}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-xl font-bold text-sec ">
+                    {initials}
+                  </span>
+                )}
               </div>
               <p className="font-semibold text-center">{user.displayName}</p>
             </div>

@@ -1,24 +1,26 @@
-import { useState, useEffect } from "react";
-import { useMovieContext } from "../../context/MovieContext";
-
-export default function SearchBar({
+import { useState } from "react";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import { Search, X } from "lucide-react";
+import { useMovieContext } from "../../../context/MovieContext";
+export default function DesktopSearchBar({
   setSearchQuery,
+
   searchQuery,
-  isLoading,
-  setIsLoading,
 }) {
   const { fetchMoviesByQuery } = useMovieContext();
 
   const handleSearch = (e) => {
     e.preventDefault();
+
     if (!searchQuery.trim()) return;
 
     fetchMoviesByQuery(searchQuery);
   };
+
   return (
     <form
       onSubmit={handleSearch}
-      className="hidden xl:flex items-center  bg-background rounded-full p-1 shadow-inner frame-container w-3xl "
+      className=" flex items-center  bg-background rounded-full p-1 shadow-inner frame-container xl:w-3xl sm:w-xl"
     >
       <input
         type="text"
@@ -27,6 +29,7 @@ export default function SearchBar({
         onChange={(e) => setSearchQuery(e.target.value)}
         value={searchQuery}
       />
+
       <button
         type="submit"
         className="bg-primary/60 hover:bg-primary text-text font-medium px-8 py-3 rounded-full transition-colors duration-200 shadow-md active:scale-98 shrink-0"

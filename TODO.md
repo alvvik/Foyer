@@ -1,7 +1,7 @@
 ## TODO
 
 - [ ] Move favorites from localstorage to Firebase account
-- [ ] Better mobile menu
+
 - [ ] AI chatbot in the corner
 - [ ] "Watch later" and "Watch list" buttons (Firebase logic)
 - [ ] add Mobie providers in movie detail (mobile and desktop)
@@ -13,6 +13,7 @@
 
 ## Done
 
+- [x] Better mobile menu
 - [x] MAKE AUTH PAGE WORK + clean code
 - [x] Transform all CSS to Tailwind framework
 - [x] Persistent login (keeps session after refreshing website)
