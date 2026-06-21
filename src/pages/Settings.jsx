@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import PublicProfileTab from "../components/Settings/PublicProfileTab";
 import AccountSettingsTab from "../components/Settings/AccountSettingsTab";
+import Modal from "../components/Modal";
+import Input from "../components/Input";
 
 export default function Settings() {
   const { user, dbData, editProfile } = useAuthContext();
 
   const [profilePic, setProfilePic] = useState("");
   const [theme, setTheme] = useState("dark");
-
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isAccountSettings, setIsAccountSettings] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -86,10 +90,16 @@ export default function Settings() {
         <form onSubmit={handleSave}>
           <TabGroup>
             <TabList className="flex justify-center items-center space-x-4 border-b border-sec/10 mb-6 pb-2">
-              <Tab className="ui-selected:text-primary ui-selected:border-b-2 ui-selected:border-primary text-sec hover:text-text focus:outline-none font-medium px-1 py-2">
+              <Tab
+                className="ui-selected:text-primary ui-selected:border-b-2 ui-selected:border-primary text-sec hover:text-text focus:outline-none font-medium px-1 py-2"
+                onClick={() => setIsAccountSettings(false)}
+              >
                 Public profile
               </Tab>
-              <Tab className="ui-selected:text-primary ui-selected:border-b-2 ui-selected:border-primary text-sec hover:text-text focus:outline-none font-medium px-1 py-2">
+              <Tab
+                className="ui-selected:text-primary ui-selected:border-b-2 ui-selected:border-primary text-sec hover:text-text focus:outline-none font-medium px-1 py-2"
+                onClick={() => setIsAccountSettings(true)}
+              >
                 Account settings
               </Tab>
             </TabList>
@@ -116,13 +126,55 @@ export default function Settings() {
 
           <div className="flex justify-center space-x-4 pt-6 mt-8 border-t border-sec/10">
             <button
-              type="submit"
-              className="px-6 py-2 text-sm font-medium bg-primary text-background-sec rounded shadow-md hover:opacity-90 transition-opacity"
+              type={isAccountSettings ? "button" : "submit"}
+              onClick={
+                isAccountSettings ? () => setIsFormOpen(true) : undefined
+              }
+              className="px-6 py-2 text-sm font-medium bg-primary  rounded shadow-md hover:opacity-90 transition-opacity text-text"
             >
-              Save Settings
+              Submit
             </button>
           </div>
         </form>
+        <Modal
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          title="Enter your password to confirm"
+        >
+          <form
+            onSubmit={(e) => {
+              handleSave();
+              setIsFormOpen(false);
+            }}
+          >
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Enter your password to comfirm
+            </label>
+            <Input
+              type="password"
+              name="currentPassword"
+              value={formData.currentPassword}
+              onChange={handleInputChange}
+              autoFocus
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setIsFormOpen(false)}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-2 text-sm font-medium bg-primary text-background-sec rounded shadow-md hover:opacity-90 transition-opacity"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+        </Modal>
       </div>
     </div>
   );

@@ -5,11 +5,11 @@
 - [ ] AI chatbot in the corner
 - [ ] "Watch later" and "Watch list" buttons (Firebase logic)
 - [ ] add Mobie providers in movie detail (mobile and desktop)
-- [ ] add confirm password in textbox when changing email
 
 ## In Progress
 
 - [ ] Edit profile (complete backend/saving logic)
+- [ ] add confirm password in textbox when changing email
 
 ## Done
 
