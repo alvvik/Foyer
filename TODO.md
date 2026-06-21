@@ -5,14 +5,14 @@
 - [ ] AI chatbot in the corner
 - [ ] "Watch later" and "Watch list" buttons (Firebase logic)
 - [ ] add Mobie providers in movie detail (mobile and desktop)
+- [ ] add toasts after actions
 
 ## In Progress
 
-- [ ] Edit profile (complete backend/saving logic)
-- [ ] add confirm password in textbox when changing email
-
 ## Done
 
+- [x] Edit profile (complete backend/saving logic)
+- [x] add confirm password in textbox when changing email
 - [x] Better mobile menu
 - [x] MAKE AUTH PAGE WORK + clean code
 - [x] Transform all CSS to Tailwind framework

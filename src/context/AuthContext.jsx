@@ -13,7 +13,13 @@ import {
   reauthenticateWithCredential,
   updateEmail,
 } from "firebase/auth";
-import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "../firebase";
 
 const AuthContext = createContext();
@@ -110,7 +116,6 @@ export const AuthProvider = ({ children }) => {
         lastName: lastName,
         userName: userName,
         photoURL: "", // NAPRAWIONE: Usunięto nieistniejącą zmienną photoURL
-        createdAt: new Date().toISOString(),
       });
     } catch (error) {
       console.error("Błąd podczas rejestracji:", error);
@@ -170,14 +175,14 @@ export const AuthProvider = ({ children }) => {
       if (!auth.currentUser) throw new Error("Użytkownik nie jest zalogowany.");
 
       // Reautentykacja (wymagana dla zmiany maila/hasła)
-      if (newPassword || (email && email !== auth.currentUser.email)) {
-        if (!currentPassword) throw new Error("Enter your current password!");
-        const credential = EmailAuthProvider.credential(
-          auth.currentUser.email,
-          currentPassword,
-        );
-        await reauthenticateWithCredential(auth.currentUser, credential);
-      }
+
+      if (!currentPassword) throw new Error("Enter your current password!");
+
+      const credential = EmailAuthProvider.credential(
+        auth.currentUser.email,
+        currentPassword,
+      );
+      await reauthenticateWithCredential(auth.currentUser, credential);
 
       // Zmiana hasła
       if (newPassword) {
@@ -213,6 +218,7 @@ export const AuthProvider = ({ children }) => {
         userName: userName || "",
         photoURL: photoURL || "",
         lastUpdate: currentTimestamp,
+        lastUpdate: serverTimestamp(),
       });
 
       const updatedSnap = await getDoc(docRef);

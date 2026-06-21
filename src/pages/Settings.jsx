@@ -70,112 +70,107 @@ export default function Settings() {
       currentPassword: formData.currentPassword,
       newPassword: formData.newPassword,
       confirmPassword: formData.confirmPassword,
-      currentTimestamp: new Date(),
     });
   };
 
   return (
-    <div className="min-h-screen bg-background text-text p-6 md:p-12 font-sans antialiased">
-      <div className="max-w-3xl mx-auto bg-background-sec rounded-lg border border-sec/10 p-6 md:p-8 shadow-xl">
-        <header className="mb-8 border-b border-sec/10 pb-4">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Account Settings
-          </h1>
-          <p className="text-sec text-sm mt-1">
-            Manage your personal information, security credentials, and
-            application theme.
-          </p>
-        </header>
+    <>
+      <div className="min-h-screen bg-background text-text p-6 md:p-12 font-sans antialiased">
+        <div className="max-w-3xl mx-auto bg-background-sec rounded-lg border border-sec/10 p-6 md:p-8 shadow-xl">
+          <header className="mb-8 border-b border-sec/10 pb-4">
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Account Settings
+            </h1>
+            <p className="text-sec text-sm mt-1">
+              Manage your personal information, security credentials, and
+              application theme.
+            </p>
+          </header>
+          <form onSubmit={handleSave}>
+            <TabGroup>
+              <TabList className="flex justify-center items-center space-x-4 border-b border-sec/10 mb-6 pb-2">
+                <Tab
+                  className="ui-selected:text-primary ui-selected:border-b-2 ui-selected:border-primary text-sec hover:text-text focus:outline-none font-medium px-1 py-2"
+                  onClick={() => setIsAccountSettings(false)}
+                >
+                  Public profile
+                </Tab>
+                <Tab
+                  className="ui-selected:text-primary ui-selected:border-b-2 ui-selected:border-primary text-sec hover:text-text focus:outline-none font-medium px-1 py-2"
+                  onClick={() => setIsAccountSettings(true)}
+                >
+                  Account settings
+                </Tab>
+              </TabList>
 
-        <form onSubmit={handleSave}>
-          <TabGroup>
-            <TabList className="flex justify-center items-center space-x-4 border-b border-sec/10 mb-6 pb-2">
-              <Tab
-                className="ui-selected:text-primary ui-selected:border-b-2 ui-selected:border-primary text-sec hover:text-text focus:outline-none font-medium px-1 py-2"
-                onClick={() => setIsAccountSettings(false)}
-              >
-                Public profile
-              </Tab>
-              <Tab
-                className="ui-selected:text-primary ui-selected:border-b-2 ui-selected:border-primary text-sec hover:text-text focus:outline-none font-medium px-1 py-2"
-                onClick={() => setIsAccountSettings(true)}
-              >
-                Account settings
-              </Tab>
-            </TabList>
+              <TabPanels>
+                <TabPanel>
+                  <PublicProfileTab
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                    profilePic={profilePic}
+                    handleFileChange={handleFileChange}
+                    removeProfilePic={removeProfilePic}
+                  />
+                </TabPanel>
 
-            <TabPanels>
-              <TabPanel>
-                <PublicProfileTab
-                  formData={formData}
-                  handleInputChange={handleInputChange}
-                  profilePic={profilePic}
-                  handleFileChange={handleFileChange}
-                  removeProfilePic={removeProfilePic}
-                />
-              </TabPanel>
+                <TabPanel>
+                  <AccountSettingsTab
+                    formData={formData}
+                    handleInputChange={handleInputChange}
+                  />
+                </TabPanel>
+              </TabPanels>
+            </TabGroup>
 
-              <TabPanel>
-                <AccountSettingsTab
-                  formData={formData}
-                  handleInputChange={handleInputChange}
-                />
-              </TabPanel>
-            </TabPanels>
-          </TabGroup>
-
-          <div className="flex justify-center space-x-4 pt-6 mt-8 border-t border-sec/10">
-            <button
-              type={isAccountSettings ? "button" : "submit"}
-              onClick={
-                isAccountSettings ? () => setIsFormOpen(true) : undefined
-              }
-              className="px-6 py-2 text-sm font-medium bg-primary  rounded shadow-md hover:opacity-90 transition-opacity text-text"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-        <Modal
-          isOpen={isFormOpen}
-          onClose={() => setIsFormOpen(false)}
-          title="Enter your password to confirm"
-        >
-          <form
-            onSubmit={(e) => {
-              handleSave();
-              setIsFormOpen(false);
-            }}
-          >
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Enter your password to comfirm
-            </label>
-            <Input
-              type="password"
-              name="currentPassword"
-              value={formData.currentPassword}
-              onChange={handleInputChange}
-              autoFocus
-            />
-
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-center space-x-4 pt-6 mt-8 border-t border-sec/10">
               <button
                 type="button"
-                onClick={() => setIsFormOpen(false)}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="px-6 py-2 text-sm font-medium bg-primary text-background-sec rounded shadow-md hover:opacity-90 transition-opacity"
+                onClick={() => setIsFormOpen(true)}
+                className="px-6 py-2 text-sm font-medium bg-primary rounded shadow-md hover:opacity-90 transition-opacity text-text"
               >
                 Submit
               </button>
             </div>
           </form>
-        </Modal>
+
+          <Modal
+            isOpen={isFormOpen}
+            onClose={() => setIsFormOpen(false)}
+            title="Enter your password to confirm"
+          >
+            <div className="space-y-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Enter your password to confirm
+              </label>
+              <Input
+                type="password"
+                name="currentPassword"
+                value={formData.currentPassword}
+                onChange={handleInputChange}
+              />
+
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setIsFormOpen(false)}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={(e) => {
+                    handleSave(e);
+                    setIsFormOpen(false);
+                  }}
+                  className="px-6 py-2 text-sm font-medium bg-primary text-background-sec rounded shadow-md"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </Modal>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

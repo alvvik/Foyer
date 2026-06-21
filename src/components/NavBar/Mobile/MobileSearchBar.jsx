@@ -15,17 +15,15 @@ export default function MobileSearchbar({ setSearchQuery, searchQuery }) {
 
   return (
     <div className="flex items-center justify-end">
-      {/* Przycisk otwierający - widoczny gdy zamknięte */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="p-3 rounded-full shadow-md text-text"
+          className="p-3 rounded-full  text-text"
         >
           <Search className="w-6 h-6" />
         </button>
       )}
 
-      {/* Rozwijany pasek - widoczny gdy otwarte */}
       {isOpen && (
         <form
           onSubmit={handleSearch}

@@ -36,23 +36,6 @@ export default function AccountSettingsTab({ formData, handleInputChange }) {
           Change Password
         </h2>
         <div className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-sec mb-1 uppercase tracking-wider">
-              Current Password
-            </label>
-            <div className="relative flex items-center w-full hover:-translate-y-1 transition-transform">
-              <Lock className="absolute left-3 w-5 h-5 text-primary pointer-events-none" />
-              <Input
-                type="password"
-                name="currentPassword"
-                value={formData.currentPassword}
-                onChange={handleInputChange}
-                required={false}
-                className="text-sm text-text transition-colors pl-10 pr-3 py-2"
-              />
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-sec mb-1 uppercase tracking-wider">
