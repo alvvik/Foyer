@@ -5,10 +5,11 @@ import PublicProfileTab from "../components/Settings/PublicProfileTab";
 import AccountSettingsTab from "../components/Settings/AccountSettingsTab";
 import Modal from "../components/Modal";
 import Input from "../components/Input";
-
+import { copyToClipboard } from "../utils/webUtils";
+import { ErrorToast, SuccessToast } from "../utils/toast";
 export default function Settings() {
   const { user, dbData, editProfile } = useAuthContext();
-
+  const [showUuid, setShowUuid] = useState(false);
   const [profilePic, setProfilePic] = useState("");
   const [theme, setTheme] = useState("dark");
   const [isInfoOpen, setIsInfoOpen] = useState(false);
@@ -59,18 +60,21 @@ export default function Settings() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    console.log("Zapisywanie danych:", formData);
-
-    await editProfile({
-      email: formData.email,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      userName: formData.userName,
-      photoURL: profilePic,
-      currentPassword: formData.currentPassword,
-      newPassword: formData.newPassword,
-      confirmPassword: formData.confirmPassword,
-    });
+    try {
+      await editProfile({
+        email: formData.email,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        userName: formData.userName,
+        photoURL: profilePic,
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword,
+        confirmPassword: formData.confirmPassword,
+      });
+      SuccessToast({ text: "Saved your data" });
+    } catch (err) {
+      ErrorToast({ text: err.message || "Try again." });
+    }
   };
 
   return (
@@ -133,7 +137,32 @@ export default function Settings() {
               </button>
             </div>
           </form>
+          <div className="text-center">
+            <p
+              onClick={() => setShowUuid(!showUuid)}
+              className=" text-sm text-text/30 mt-4 hover:text-text text-center inline-block"
+            >
+              {!showUuid ? "Show" : "Hide"} your uuid{" "}
+            </p>
+            <p
+              onClick={async () => {
+                try {
+                  await copyToClipboard(user.uid);
+                  SuccessToast({ text: "Copied to clipboard!" });
+                } catch (err) {
+                  ErrorToast({ text: "Try again or copy manually" });
+                }
+              }}
+            >
+              {showUuid && (
+                <>
+                  <br />
 
+                  {user.uid}
+                </>
+              )}
+            </p>
+          </div>
           <Modal
             isOpen={isFormOpen}
             onClose={() => setIsFormOpen(false)}

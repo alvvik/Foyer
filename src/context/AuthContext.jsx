@@ -26,7 +26,35 @@ const AuthContext = createContext();
 export const useAuthContext = () => useContext(AuthContext);
 
 const auth = getAuth();
+const errorMap = {
+  // --- SIGN IN & SIGN UP (General) ---
+  "auth/invalid-email": "The email address is poorly formatted.",
+  "auth/user-disabled":
+    "This user account has been disabled by an administrator.",
+  "auth/user-not-found": "There is no user corresponding to this email.",
+  "auth/wrong-password": "Incorrect password. Please try again.",
 
+  // --- SIGN UP (Account Creation) ---
+  "auth/email-already-in-use":
+    "An account already exists with this email address.",
+  "auth/operation-not-allowed":
+    "Email/password accounts are not enabled for this project.",
+  "auth/weak-password":
+    "The password is too weak. It must be at least 6 characters long.",
+
+  // --- SECURITY, SESSIONS & NETWORK ---
+  "auth/too-many-requests":
+    "Too many unsuccessful login attempts. Access to this account has been temporarily disabled. Please try again later.",
+  "auth/requires-recent-login":
+    "This operation is sensitive and requires recent authentication. Please log in again.",
+  "auth/network-request-failed":
+    "A network error occurred. Please check your internet connection.",
+
+  // --- MODERN FIREBASE CORE ERROR (v9/v10+) ---
+  // Firebase often uses this generic error now to prevent email enumeration (security best practice)
+  "auth/invalid-credential":
+    "Invalid email or password. Please check your credentials and try again.",
+};
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [dbData, setDbData] = useState(null);
@@ -37,8 +65,10 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       try {
         await setPersistence(auth, browserLocalPersistence);
-      } catch (error) {
-        console.error("Persistence error:", error);
+      } catch (err) {
+        const friendlyMessage =
+          errorMap[err.code] || err.message || "An error occurred.";
+        setError(friendlyMessage);
       }
     };
     initAuth();
@@ -60,14 +90,14 @@ export const AuthProvider = ({ children }) => {
         if (docSnap.exists()) {
           setDbData(docSnap.data());
 
-          // BONUS: Jeśli email w Firebase Auth zmienił się (użytkownik kliknął link),
-          // a w Firestore jest stary, zaktualizuj go automatycznie tutaj!
           if (docSnap.data().email !== firebaseUser.email) {
             await updateDoc(docRef, { email: firebaseUser.email });
           }
         }
       } catch (err) {
-        console.error("Błąd pobierania Firestore:", err);
+        const friendlyMessage =
+          errorMap[err.code] || err.message || "An error occurred.";
+        setError(friendlyMessage);
       }
     });
 
@@ -79,8 +109,11 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true);
       setError(null);
       await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      setError("Invalid email or password.");
+    } catch (err) {
+      const friendlyMessage =
+        errorMap[err.code] || err.message || "An error occurred.";
+      setError(friendlyMessage);
+      throw new Error(friendlyMessage);
     } finally {
       setIsLoading(false);
     }
@@ -115,11 +148,13 @@ export const AuthProvider = ({ children }) => {
         firstName: firstName,
         lastName: lastName,
         userName: userName,
-        photoURL: "", // NAPRAWIONE: Usunięto nieistniejącą zmienną photoURL
+        photoURL: "",
       });
-    } catch (error) {
-      console.error("Błąd podczas rejestracji:", error);
-      setError(error.message || "Wystąpił błąd podczas rejestracji.");
+    } catch (err) {
+      const friendlyMessage =
+        errorMap[err.code] || err.message || "An error occurred.";
+      setError(friendlyMessage);
+      throw new Error(friendlyMessage);
     } finally {
       setIsLoading(false);
     }
@@ -129,8 +164,11 @@ export const AuthProvider = ({ children }) => {
     try {
       setIsLoading(true);
       await signOut(auth);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      const friendlyMessage =
+        errorMap[err.code] || err.message || "An error occurred.";
+      setError(friendlyMessage);
+      throw new Error(friendlyMessage);
     } finally {
       setIsLoading(false);
     }
@@ -145,17 +183,10 @@ export const AuthProvider = ({ children }) => {
 
   const changeEmail = async ({ email }) => {
     if (email === auth.currentUser.email) {
-      throw new Error("Wpisz inny adres email.");
+      throw new Error("Type another email!");
     }
 
-    try {
-      // Zmienia email natychmiast w bazie Firebase Auth, bez wysyłania linków!
-      await updateEmail(auth.currentUser, email);
-      console.log("Email zmieniony pomyślnie!");
-    } catch (error) {
-      console.error("Błąd podczas bezpośredniej zmiany email:", error);
-      throw error;
-    }
+    await updateEmail(auth.currentUser, email);
   };
   const editProfile = async ({
     email,
@@ -217,7 +248,7 @@ export const AuthProvider = ({ children }) => {
         lastName: lastName || "",
         userName: userName || "",
         photoURL: photoURL || "",
-        lastUpdate: currentTimestamp,
+
         lastUpdate: serverTimestamp(),
       });
 
@@ -225,9 +256,11 @@ export const AuthProvider = ({ children }) => {
       if (updatedSnap.exists()) {
         setDbData(updatedSnap.data());
       }
-    } catch (error) {
-      console.error("Błąd podczas edycji profilu:", error);
-      setError(error.message || "Nie udało się zaktualizować profilu.");
+    } catch (err) {
+      const friendlyMessage =
+        errorMap[err.code] || err.message || "An error occurred.";
+      setError(friendlyMessage);
+      throw new Error(friendlyMessage);
     } finally {
       setIsLoading(false);
     }
