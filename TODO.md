@@ -11,6 +11,7 @@
 ## In Progress
 
 - [ ] doing toasts
+- [ ] add working initials in user photo component
 
 ## Done
 
