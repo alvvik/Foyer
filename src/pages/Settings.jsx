@@ -11,7 +11,7 @@ export default function Settings() {
   const { user, dbData, editProfile } = useAuthContext();
   const [showUuid, setShowUuid] = useState(false);
   const [profilePic, setProfilePic] = useState("");
-  const [theme, setTheme] = useState("dark");
+
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAccountSettings, setIsAccountSettings] = useState(false);

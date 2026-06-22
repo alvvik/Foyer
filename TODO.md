@@ -12,6 +12,7 @@
 
 - [ ] doing toasts
 - [ ] add working initials in user photo component
+- [ ] (38 line authpage) add success when login and error when not succes and same in sign in
 
 ## Done
 

@@ -5,6 +5,7 @@ import { UserRound, AtSign, Lock, Eye, EyeOff } from "lucide-react";
 
 import { Navigate } from "react-router-dom";
 import Input from "../components/Input";
+import { InfoToast } from "../utils/toast";
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -25,20 +26,25 @@ export default function AuthPage() {
   } = useAuthContext();
   if (user) return <Navigate to="/" replace={true} />;
 
-  const handleSubmit = () => {
-    if (resetPassword) {
-      handleResetPasswordLink();
-      return;
-    }
-    isLogin
-      ? callApiLoginWithEmail(email, password)
-      : callApiRegisterUserWithEmail(
+  const handleSubmit = async () => {
+    try {
+      if (resetPassword) {
+        handleResetPasswordLink();
+        InfoToast({ text: "We send reset link to your email!" });
+        return;
+      }
+      if (isLogin) {
+        callApiLoginWithEmail(email, password);
+      } else {
+        callApiRegisterUserWithEmail(
           email,
           password,
           firstName,
           lastName,
           userName,
         );
+      }
+    } catch (err) {}
   };
   const handleResetPasswordLink = () => {
     callApiResetPassowrd(email);
