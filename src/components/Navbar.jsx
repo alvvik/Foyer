@@ -5,6 +5,7 @@ import MobileMenu from "./NavBar/Mobile/MobileMenu";
 import DesktopMenu from "./NavBar/Desktop/DesktopMenu";
 import DesktopSearchbar from "./NavBar/Desktop/DesktopSearchBar";
 import MobileSearchbar from "./NavBar/Mobile/MobileSearchBar";
+
 export default function Navbar({
   setSearchQuery,
   searchQuery,
