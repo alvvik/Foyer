@@ -1,32 +1,7 @@
 import { Play, Star } from "lucide-react";
 export default function MobileMovieDetail({ movie }) {
-  const providers = [
-    {
-      name: "Netflix",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/1/18/Netflix_2016_N_logo.svg",
-      url: "#",
-    },
-    {
-      name: "Max",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Max_logo.svg",
-      url: "#",
-    },
-    {
-      name: "Disney+",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg",
-      url: "#",
-    },
-    {
-      name: "Prime Video",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg",
-      url: "#",
-    },
-    {
-      name: "Apple TV",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/2/28/Apple_TV_Plus_Logo.svg",
-      url: "#",
-    },
-  ];
+  const rentProvider = movie.providers?.results?.US?.rent || [];
+  const buyProvider = movie.providers?.results?.US?.buy || [];
   const date = new Date(movie.details.release_date);
   const link = `https://www.youtube.com/results?search_query=trailer+${movie.details.title}`;
   return (
@@ -40,8 +15,8 @@ export default function MobileMovieDetail({ movie }) {
         <div className="flex justify-center mt-24">
           <a href={link}>
             <div className="w-14 h-14 bg-background-sec rounded-full flex justify-center items-center ring-1 ring-primary  hover:scale-105 hover:transition-all hover:-translate-y-2.5 hover:shadow-2xl ">
-            <Play className="text-primary" />
-          </div>
+              <Play className="text-primary" />
+            </div>
           </a>
         </div>
         <div className="flex justify-center flex-col m-4">
@@ -66,32 +41,77 @@ export default function MobileMovieDetail({ movie }) {
           />
           <p>{movie.details.overview}</p>
         </div>
-        <div className="space-y-3 pt-12">
+        <div className="space-y-6 pt-12">
           <h4 className="font-bold text-lg tracking-wide">Where to watch?</h4>
 
-          {}
-          <div className="flex gap-4 overflow-x-auto  scrollbar-none snap-x snap-mandatory py-2">
-            {providers.map((provider) => (
-              <a
-                key={provider.name}
-                href={provider.url}
-                className="flex flex-col items-center gap-1.5 shrink-0 snap-start active:scale-95 transition-transform"
-              >
-                {}
-                <div className="w-16 h-16 rounded-2xl bg-background-sec ring-1 ring-primary p-2.5 flex items-center justify-center shadow-sm">
-                  <img
-                    src={provider.logo}
-                    alt={provider.name}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                </div>
-                {}
-                <span className="text-xs font-medium text-text truncate max-w-[64px] text-center">
-                  {provider.name}
-                </span>
-              </a>
-            ))}
-          </div>
+          {/* RENT PROVIDERS */}
+          {rentProvider.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary/80">
+                Rent
+              </p>
+              <div className="flex gap-4 overflow-x-auto scrollbar-none snap-x snap-mandatory py-2">
+                {rentProvider.map((provider) => (
+                  <a
+                    key={provider.provider_id || provider.id}
+                    href={movie.providers.results.US.link}
+                    className="flex flex-col items-center gap-1.5 shrink-0 snap-start active:scale-95 transition-transform"
+                  >
+                    {/* Zaokrąglone logo w stylu mobilnym */}
+                    <div className="w-16 h-16 rounded-2xl bg-background-sec ring-1 ring-primary p-2.5 flex items-center justify-center shadow-sm">
+                      <img
+                        src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                        alt={provider.provider_name}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                    {/* Podpis pod logo */}
+                    <span className="text-xs font-medium text-text truncate max-w-[64px] text-center">
+                      {provider.provider_name}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* BUY PROVIDERS */}
+          {buyProvider.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary/80">
+                Buy
+              </p>
+              <div className="flex gap-4 overflow-x-auto scrollbar-none snap-x snap-mandatory py-2">
+                {buyProvider.map((provider) => (
+                  <a
+                    key={provider.provider_id || provider.id}
+                    href={movie.providers.results.US.link}
+                    className="flex flex-col items-center gap-1.5 shrink-0 snap-start active:scale-95 transition-transform"
+                  >
+                    {/* Zaokrąglone logo w stylu mobilnym */}
+                    <div className="w-16 h-16 rounded-2xl bg-background-sec ring-1 ring-primary p-2.5 flex items-center justify-center shadow-sm">
+                      <img
+                        src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                        alt={provider.provider_name}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                    {/* Podpis pod logo */}
+                    <span className="text-xs font-medium text-text truncate max-w-[64px] text-center">
+                      {provider.provider_name}
+                    </span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Komunikat o braku dostawców */}
+          {rentProvider.length === 0 && buyProvider.length === 0 && (
+            <p className="text-sm text-gray-400 italic">
+              Not available for rent or purchase in the US.
+            </p>
+          )}
         </div>
       </div>
     </div>

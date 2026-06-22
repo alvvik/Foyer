@@ -4,18 +4,15 @@
 
 - [ ] AI chatbot in the corner
 - [ ] "Watch later" and "Watch list" buttons (Firebase logic)
-- [ ] add Mobie providers in movie detail (mobile and desktop)
-- [ ] add toasts after actions
-- [ ] add toast call after actions
 
 ## In Progress
 
-- [ ] doing toasts
-- [ ] add working initials in user photo component
-- [ ] (38 line authpage) add success when login and error when not succes and same in sign in
+- [ ] add Mobie providers in movie detail (mobile and desktop)
 
 ## Done
 
+- [ x ] add working initials in user photo component
+- [ ig x ] doing toasts
 - [x] Edit profile (complete backend/saving logic)
 - [x] add confirm password in textbox when changing email
 - [x] Better mobile menu

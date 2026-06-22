@@ -15,13 +15,13 @@ export const searchMovies = async (query) => {
   return data.results;
 };
 export const callMovieDetails = async (id) => {
-  const [resDetails, resImages, resVideos] = await Promise.all([
+  const [resDetails, resImages, resProviders] = await Promise.all([
     fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`),
     fetch(`${BASE_URL}/movie/${id}/images?api_key=${API_KEY}`),
+    fetch(`${BASE_URL}/movie/${id}/watch/providers?api_key=${API_KEY}`),
   ]);
   const details = await resDetails.json();
   const images = await resImages.json();
-
-  return { details, images };
+  const providers = await resProviders.json();
+  return { details, images, providers };
 };
-
