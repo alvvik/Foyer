@@ -26,10 +26,6 @@ export default function AuthPage() {
   } = useAuthContext();
   if (user) return <Navigate to="/" replace={true} />;
 
-  const handleResetPasswordLink = async () => {
-    await callApiResetPassword(email);
-  };
-
   const handleSubmit = async () => {
     try {
       if (resetPassword) {
@@ -52,8 +48,11 @@ export default function AuthPage() {
         SuccessToast({ text: "Account created successfully!" });
       }
     } catch (err) {
-      ErrorToast({ text: err });
+      ErrorToast({ text: err?.message || "An error occurred" });
     }
+  };
+  const handleResetPasswordLink = () => {
+    callApiResetPassowrd(email);
   };
   return (
     <div className="md:flex justify-center   md:items-center md:p-24  bg-background/90 ">
@@ -170,7 +169,7 @@ export default function AuthPage() {
           <div className="flex justify-center">
             <input
               type="submit"
-              className="px-8 py-2 bg-primary text-center w-3/4 rounded-2xl font-bold my-2"
+              className="px-8 py-2 bg-primary text-center w-3/4rounded-2xl font-bold my-2"
               value={
                 resetPassword
                   ? "Send password reset link"
