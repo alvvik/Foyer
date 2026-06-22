@@ -5,7 +5,7 @@ import { UserRound, AtSign, Lock, Eye, EyeOff } from "lucide-react";
 
 import { Navigate } from "react-router-dom";
 import Input from "../components/Input";
-import { InfoToast } from "../utils/toast";
+import { InfoToast, ErrorToast, SuccessToast } from "../utils/toast";
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -26,28 +26,34 @@ export default function AuthPage() {
   } = useAuthContext();
   if (user) return <Navigate to="/" replace={true} />;
 
+  const handleResetPasswordLink = async () => {
+    await callApiResetPassword(email);
+  };
+
   const handleSubmit = async () => {
     try {
       if (resetPassword) {
-        handleResetPasswordLink();
-        InfoToast({ text: "We send reset link to your email!" });
+        await handleResetPasswordLink();
+        InfoToast({ text: "We sent a reset link to your email!" });
         return;
       }
+
       if (isLogin) {
-        callApiLoginWithEmail(email, password);
+        await callApiLoginWithEmail(email, password);
+        SuccessToast({ text: "Successfully logged in!" });
       } else {
-        callApiRegisterUserWithEmail(
+        await callApiRegisterUserWithEmail(
           email,
           password,
           firstName,
           lastName,
           userName,
         );
+        SuccessToast({ text: "Account created successfully!" });
       }
-    } catch (err) {}
-  };
-  const handleResetPasswordLink = () => {
-    callApiResetPassowrd(email);
+    } catch (err) {
+      ErrorToast({ text: err });
+    }
   };
   return (
     <div className="md:flex justify-center   md:items-center md:p-24  bg-background/90 ">
@@ -164,7 +170,7 @@ export default function AuthPage() {
           <div className="flex justify-center">
             <input
               type="submit"
-              className="px-8 py-2 bg-primary text-center w-3/4rounded-2xl font-bold my-2"
+              className="px-8 py-2 bg-primary text-center w-3/4 rounded-2xl font-bold my-2"
               value={
                 resetPassword
                   ? "Send password reset link"
