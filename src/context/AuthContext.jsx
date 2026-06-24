@@ -149,6 +149,7 @@ export const AuthProvider = ({ children }) => {
         lastName: lastName,
         userName: userName,
         photoURL: "",
+        favorites_id: [],
       });
     } catch (err) {
       const friendlyMessage =
