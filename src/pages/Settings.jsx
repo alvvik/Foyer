@@ -168,7 +168,7 @@ export default function Settings() {
             onClose={() => setIsFormOpen(false)}
             title="Enter your password to confirm"
           >
-            <div className="space-y-4">
+            <div className="space-y-4 ">
               <label className="block text-sm font-medium text-gray-700">
                 Enter your password to confirm
               </label>
@@ -182,7 +182,7 @@ export default function Settings() {
               <div className="flex justify-end gap-3">
                 <button
                   onClick={() => setIsFormOpen(false)}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg"
+                  className="px-4 py-2 bg-background text-text rounded-lg"
                 >
                   Cancel
                 </button>
@@ -191,7 +191,7 @@ export default function Settings() {
                     handleSave(e);
                     setIsFormOpen(false);
                   }}
-                  className="px-6 py-2 text-sm font-medium bg-primary text-background-sec rounded shadow-md"
+                  className="px-6 py-2 text-sm font-medium bg-primary text-text rounded shadow-md"
                 >
                   Submit
                 </button>

@@ -54,15 +54,13 @@ export default function MovieDetail() {
   const link = `https://www.youtube.com/results?search_query=trailer+${movie.details.title}`;
   return (
     <div className="bg-background">
-      <div className="lg:hidden">
-        <MobileMovieDetail
-          movie={movie}
-        ></MobileMovieDetail>
+      <div className="block lg:hidden">
+        <MobileMovieDetail movie={movie} />
       </div>
-      <div className="sm:hidden lg:block">
-      <DesktopMobileDetail movie={movie}></DesktopMobileDetail>
+
+      <div className="hidden lg:block">
+        <DesktopMobileDetail movie={movie} />
       </div>
-      {}
     </div>
   );
 }

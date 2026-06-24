@@ -17,7 +17,6 @@ export default function Navbar({
       <nav className="bg-background-sec  flex items-center p-6  px-12 justify-between flex-col lg:flex-row">
         <h1 className="text-text font-bold text-5xl">
           <Link to="/">
-            {" "}
             Foyer <span className="text-primary">.</span>
           </Link>
         </h1>

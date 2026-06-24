@@ -59,14 +59,14 @@ export default function DesktopMenu() {
               </li>
 
               <li>
-                <div
+                <button
                   role="button"
                   onClick={() => handleLogout(close)}
                   className="py-2 px-3 hover:text-primary hover:bg-primary/10 rounded-xl flex gap-3 items-center active:scale-95 transition-all cursor-pointer w-full"
                 >
                   <LogOut className="w-5 h-5" />
                   <span>Log out</span>
-                </div>
+                </button>
               </li>
               <ThemeSwitch />
             </ul>
