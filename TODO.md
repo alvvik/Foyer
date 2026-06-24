@@ -1,16 +1,15 @@
 ## TODO
 
-- [ ] Move favorites from localstorage to Firebase account
-
 - [ ] AI chatbot in the corner
 - [ ] "Watch later" and "Watch list" buttons (Firebase logic)
+- [ ] add favorites site style
 
 ## In Progress
 
-- [ ] add Mobie providers in movie detail (mobile and desktop)
-
 ## Done
 
+- [x] Move favorites from localstorage to Firebase account
+- [ x ] add Mobie providers in movie detail (mobile and desktop)
 - [ x ] add working initials in user photo component
 - [ ig x ] doing toasts
 - [x] Edit profile (complete backend/saving logic)

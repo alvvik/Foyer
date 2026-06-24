@@ -47,6 +47,15 @@ export default function MobileMenu() {
                       Manage account
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      to="/favorites"
+                      className="block p-4 hover:bg-gray-800/20"
+                      onClick={() => close()}
+                    >
+                      Favorites
+                    </Link>
+                  </li>
                 </>
               )}
               <li className="flex justify-center items-center">

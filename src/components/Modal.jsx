@@ -23,7 +23,7 @@ export default function Modal({
           {title && (
             <DialogTitle
               as="h3"
-              className="text-lg font-bold leading-6 text-text mb-4"
+              className="text-lg font-bold leading-6 text-text mb-4 text-center"
             >
               {title}
             </DialogTitle>

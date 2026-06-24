@@ -2,7 +2,7 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../context/AuthContext";
 
-import { LogOut, Settings } from "lucide-react";
+import { LogOut, Settings, Heart } from "lucide-react";
 import ThemeSwitch from "../ThemeSwitch";
 import UserPhoto from "../../UserPhoto";
 
@@ -57,7 +57,16 @@ export default function DesktopMenu() {
                   <span>Account</span>
                 </Link>
               </li>
-
+              <li>
+                <Link
+                  to="/favorites"
+                  className="py-2 px-3 hover:text-primary hover:bg-primary/10 rounded-xl flex gap-3 items-center active:scale-95 transition-all cursor-pointer w-full"
+                  onClick={() => close()}
+                >
+                  <Heart className="w-5 h-5" />
+                  <span>Favorites</span>
+                </Link>
+              </li>
               <li>
                 <button
                   role="button"
