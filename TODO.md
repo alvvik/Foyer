@@ -2,12 +2,12 @@
 
 - [ ] AI chatbot in the corner
 - [ ] "Watch later" and "Watch list" buttons (Firebase logic)
-- [ ] add favorites site style
 
 ## In Progress
 
 ## Done
 
+- [x] add favorites site style
 - [x] Move favorites from localstorage to Firebase account
 - [ x ] add Mobie providers in movie detail (mobile and desktop)
 - [ x ] add working initials in user photo component

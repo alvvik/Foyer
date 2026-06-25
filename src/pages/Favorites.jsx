@@ -31,7 +31,7 @@ export default function Favorites() {
           to="/"
           className="bg-primary/60 hover:bg-primary text-text font-medium px-8 py-3 rounded-full transition-colors duration-200 shadow-md active:scale-98 shrink-0"
         >
-          Search
+          Go back to home
         </Link>
       </div>
     </div>

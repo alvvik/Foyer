@@ -1,8 +1,23 @@
 import { log } from "firebase/firestore/pipelines";
 import { Play, Star } from "lucide-react";
 import Movieproviders from "./Movieproviders";
-
+import { useMovieContext } from "../../context/MovieContext";
 export default function DesktopMobileDetail({ movie }) {
+  const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
+  const favorite = isFavorite(movie.id);
+
+  async function onFavoriteClick(e) {
+    try {
+      e.preventDefault();
+      if (favorite) removeFromFavorites(movie.id);
+      else addToFavorites(movie);
+    } catch (error) {
+      console.log(error);
+
+      ErrorToast({ text: error.message });
+      setModelOpen(true);
+    }
+  }
   const date = new Date(movie.details.release_date);
   const link = `https://www.youtube.com/results?search_query=trailer+${movie.details.title}`;
   const genres = movie.details?.genres?.map((g) => g.name).join(", ") || "None";
@@ -35,8 +50,16 @@ export default function DesktopMobileDetail({ movie }) {
                   <Play className="inline mr-2" /> Watch trailer
                 </button>
               </a>
-              <button className="bg-background-sec  px-8 py-1.5 rounded transition-all hover:bg-background-sec/60 hover:shadow-2xl hover:ring-1 hover:ring-primary">
-                <Star className="inline mr-2" /> Add to favorites
+              <button
+                className="bg-background-sec flex justify-center items-center  px-8 py-1.5 rounded transition-all hover:bg-background-sec/60 hover:shadow-2xl hover:ring-1 hover:ring-primary"
+                onClick={onFavoriteClick}
+              >
+                <span
+                  className={` text-2xl inline mr-2 ${favorite ? "text-red-500" : "text-white"}`}
+                >
+                  ❤︎
+                </span>
+                Add to favorites
               </button>
             </div>
           </div>

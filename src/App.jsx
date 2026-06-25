@@ -15,6 +15,8 @@ import Settings from "./pages/Settings";
 import ProtectedRoute from "./services/ProtectedRoute";
 import { ThemeProvider, useThemeContext } from "./context/ThemeContext";
 import { ToastContainer } from "react-toastify";
+import WatchList from "./pages/WatchList";
+
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const { isDarkMode } = useThemeContext();
@@ -35,6 +37,10 @@ function App() {
                 <Route path="/" element={<Home />} />
 
                 <Route path="/movies/:id" element={<MovieDetail />} />
+                <Route
+                  path="/watchlist/:WatchListName"
+                  element={<WatchList />}
+                />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/login" element={<AuthPage />} />
                 <Route element={<ProtectedRoute />}>

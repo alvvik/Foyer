@@ -1,5 +1,5 @@
 import { useMovieContext } from "../context/MovieContext";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { ErrorToast } from "../utils/toast";
 import Modal from "./Modal";
 import { useState } from "react";
@@ -20,7 +20,6 @@ export default function MovieCard({ movie, setModelOpen }) {
       setModelOpen(true);
     }
   }
-  console.log(movie);
 
   return (
     <>

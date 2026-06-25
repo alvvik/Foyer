@@ -15,10 +15,6 @@ export default function MovieDetail() {
   const [isLoading, setLoading] = useState(false);
   const [movie, setMovie] = useState(null);
 
-  const galleryRef = useRef(null);
-
-  let images = [];
-
   useEffect(() => {
     const getMovieDetail = async () => {
       setLoading(true);
@@ -40,18 +36,7 @@ export default function MovieDetail() {
   if (isLoading) return <div>Trwa ładowanie strony...</div>;
   if (error) return <div>Wystąpił błąd...</div>;
   if (!movie) return null;
-  console.log(movie);
-  movie.images.backdrops.forEach((image) => {
-    images = [
-      ...images,
-      {
-        original: `https://image.tmdb.org/t/p/original/${image.file_path}`,
-      },
-    ];
-  });
-  const genresText =
-    movie.details?.genres?.map((g) => g.name).join(", ") || "None";
-  const link = `https://www.youtube.com/results?search_query=trailer+${movie.details.title}`;
+
   return (
     <div className="bg-background">
       <div className="block lg:hidden">
