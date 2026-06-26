@@ -4,12 +4,12 @@ import Movieproviders from "./Movieproviders";
 import { useMovieContext } from "../../context/MovieContext";
 export default function DesktopMobileDetail({ movie }) {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
-  const favorite = isFavorite(movie.id);
+  const favorite = isFavorite(movie.details.id);
 
   async function onFavoriteClick(e) {
     try {
       e.preventDefault();
-      if (favorite) removeFromFavorites(movie.id);
+      if (favorite) removeFromFavorites(movie.details.id);
       else addToFavorites(movie);
     } catch (error) {
       console.log(error);

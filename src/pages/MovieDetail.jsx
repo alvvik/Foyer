@@ -3,8 +3,6 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { callMovieDetails } from "../services/api";
 
-import ImageGallery from "react-image-gallery";
-import "react-image-gallery/styles/image-gallery.css";
 import MobileMovieDetail from "../components/MovieDetail/MobileMovieDetail";
 import DesktopMobileDetail from "../components/MovieDetail/DesktopMovieDetail";
 
