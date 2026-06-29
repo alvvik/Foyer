@@ -1,6 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { getPopularMovies, searchMovies } from "../services/api";
-
 import {
   doc,
   getDoc,
@@ -8,6 +7,7 @@ import {
   setDoc,
   collection,
   getDocs,
+  serverTimestamp
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "./AuthContext";
@@ -22,7 +22,7 @@ export const MovieProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [favorites, setFavorites] = useState([]);
-
+const [watchlists, setWatchlists] = useState([]);
   useEffect(() => {
     if (!user) {
       setFavorites([]);
@@ -30,50 +30,50 @@ export const MovieProvider = ({ children }) => {
     }
     const getFilms = async () => {
       try {
-        console.log(user);
-
         const docRef = doc(db, "users", user.uid);
-
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          console.log("Dane: ", docSnap.data());
-          setFavorites(docSnap.data().favorites_id);
+         setFavorites(docSnap.data().favorites_id || []);
         }
       } catch (error) {
-        console.log(error);
+        console.error("Błąd podczas pobierania ulubionych:", error);
       }
     };
     getFilms();
   }, [user]);
 
-  useEffect(() => {
-    //localStorage.setItem("favorites", JSON.stringify(favorites));
-    const setFavorites = async () => {
-      try {
-        const docRef = doc(db, "users", user.uid);
-        await updateDoc(docRef, {
-          favorites_id: favorites,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    setFavorites();
-  }, [favorites]);
 
-  const addToFavorites = (movie) => {
-    if (!user) throw new Error("You need be logged in!");
-    console.log(`dodano `, movie);
+  const addToFavorites = async (movie) => {
+    if (!user) throw new Error("You need to be logged in!");
+    
+ 
+    if (favorites.some((fav) => fav.id === movie.id)) return;
 
-    setFavorites((prev) =>
-      prev.some((favorite) => favorite.id === movie.id)
-        ? prev
-        : [...prev, movie],
-    );
+    const updatedFavorites = [...favorites, movie];
+    
+   setFavorites(updatedFavorites);
+
+   try {
+      const docRef = doc(db, "users", user.uid);
+      await updateDoc(docRef, { favorites_id: updatedFavorites });
+      console.log(`Dodano do ulubionych w DB:`, movie.title || movie.id);
+    } catch (error) {
+      console.error("Błąd zapisu ulubionego w DB:", error);
+   }
   };
 
-  const removeFromFavorites = (movieId) => {
-    setFavorites((prev) => prev.filter((movie) => movie.id !== movieId));
+ const removeFromFavorites = async (movieId) => {
+    if (!user) return;
+
+    const updatedFavorites = favorites.filter((movie) => movie.id !== movieId);
+    setFavorites(updatedFavorites);
+
+    try {
+      const docRef = doc(db, "users", user.uid);
+      await updateDoc(docRef, { favorites_id: updatedFavorites });
+    } catch (error) {
+      console.error("Błąd usuwania ulubionego z DB:", error);
+    }
   };
 
   const isFavorite = (movieId) => {
@@ -88,7 +88,7 @@ export const MovieProvider = ({ children }) => {
       setMovies(searchResult);
     } catch (err) {
       setError("Failed to search movies...");
-      console.log(err);
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +103,7 @@ export const MovieProvider = ({ children }) => {
         setMovies(popularMovies);
       } catch (err) {
         setError(`Failed to load movies...`);
-        console.log(err);
+        console.error(err);
       } finally {
         setIsLoading(false);
       }
@@ -111,57 +111,43 @@ export const MovieProvider = ({ children }) => {
     loadPopularMovies();
   }, []);
 
-  // watchlists
+  // --- Watchlists ---
 
-  const addWatchListFilm = async (watchlistName, watchListDesc) => {
-    console.log("Dodawanie/aktualizacja listy:", watchlistName);
-
-    try {
-      // Wskazujemy ścieżkę do konkretnego dokumentu listy
-      const docRef = doc(db, "users", user.uid, "watchlists", watchlistName);
-
-      // setDoc z { merge: true } stworzy dokument, jeśli nie istnieje,
-      // lub zaktualizuje tylko podane pola, nie usuwając reszty danych.
-      await setDoc(
-        docRef,
-        {
-          watchlistName: watchlistName,
-          watchListDesc: watchListDesc,
-          createdAt: new Date(), // Opcjonalnie: dodaj datę utworzenia
-        },
-        { merge: true },
-      );
-
-      console.log("Lista została pomyślnie zapisana w bazie.");
-    } catch (error) {
-      console.error("Błąd podczas dodawania listy:", error);
-      // Możesz tutaj dodać obsługę błędów, np. setError(...)
+  useEffect(() => {
+    if (!user) {
+      setWatchlists([]);
+      console.error("You need to be logged in!");
     }
-  };
-  const getWatchLists = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const colRef = collection(db, "users", user.uid, "watchlists");
-      const querySnapshot = await getDocs(colRef);
-
-      // Mapujemy dokumenty bezpośrednio na obiekty z danymi
-      const lists = querySnapshot.docs.map((doc) => ({
-        id: doc.id, // ID dokumentu (np. "moja_lista_1")
-        ...doc.data(), // Pobiera pola 'nazwaListy' i 'desc'
-      }));
-
-      console.log("Moje listy:", lists);
-      return lists;
-    } catch (err) {
-      console.error(err);
-      setError("Failed to fetch watchlists...");
-      return [];
-    } finally {
-      setIsLoading(false);
+    const fetchLists = async () => {
+      try {
+        const colRef = collection(db, "users", user.uid, "watchlists");
+        const snap = await getDocs(colRef);
+        const lists = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setWatchlists(lists);
+      }
+    catch (err) {
+      console.error("Error fetching watchlists:", err);
     }
-  };
+    }
+    fetchLists();
+  }, [user]);
+  const createWatchlist = async (name,desc) => {
+    if (!user) return;
+    try{
+      const docRef = doc(db, "users", user.uid, "watchlists",name);
+      const newList = {
+        watchListName: name,
+        watchListDesc: desc,
+        createdAt: serverTimestamp(),
+      };
+      await setDoc(docRef, newList)
+    setWatchlists((prev) => [...prev, { id: name, ...newList }]);
+    }
+
+    catch (err) {
+      console.error("Error creating watchlist:", err);
+    }
+  }
 
   const value = {
     favorites,
@@ -172,8 +158,9 @@ export const MovieProvider = ({ children }) => {
     isLoading,
     error,
     fetchMoviesByQuery,
-    addWatchListFilm,
-    getWatchLists,
+    
+    watchlists,
+    createWatchlist,
   };
 
   return (

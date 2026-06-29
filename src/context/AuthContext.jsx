@@ -161,6 +161,7 @@ export const AuthProvider = ({ children }) => {
         listName,
       );
       await setDoc(listRef, {
+        id: 0,
         watchlistName: listName,
         watchListDesc: "Moja domyślna lista ulubionych filmów.",
         createdAt: serverTimestamp(), // Użyj serverTimestamp
