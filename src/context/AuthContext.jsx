@@ -151,6 +151,20 @@ export const AuthProvider = ({ children }) => {
         photoURL: "",
         favorites_id: [],
       });
+      // POPRAWNIE dla setDoc (musisz podać nazwę/ID listy):
+      const listName = "Moje Ulubione";
+      const listRef = doc(
+        db,
+        "users",
+        firebaseUser.uid,
+        "watchlists",
+        listName,
+      );
+      await setDoc(listRef, {
+        watchlistName: listName,
+        watchListDesc: "Moja domyślna lista ulubionych filmów.",
+        createdAt: serverTimestamp(), // Użyj serverTimestamp
+      });
     } catch (err) {
       const friendlyMessage =
         errorMap[err.code] || err.message || "An error occurred.";

@@ -3,10 +3,20 @@ import { Link, Navigate } from "react-router-dom";
 import { ErrorToast } from "../utils/toast";
 import Modal from "./Modal";
 import { useState } from "react";
+import ManageWatchList from "./ManageWatchList";
+import { ListPlus } from "lucide-react";
 
-export default function MovieCard({ movie, setModelOpen }) {
+export default function MovieCard({
+  movie,
+  setModelOpen,
+  watchlists = [],
+  onCreateWatchlist,
+  onAddMovieToWatchlist,
+  onDeleteWatchlist,
+}) {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
   const favorite = isFavorite(movie.id);
+  const [isWatchlistOpen, setIsWatchlistOpen] = useState(false);
 
   async function onFavoriteClick(e) {
     try {
@@ -41,6 +51,18 @@ export default function MovieCard({ movie, setModelOpen }) {
             >
               ❤︎
             </button>
+
+            <button
+              className="absolute right-14 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-white transition-colors duration-200 hover:bg-black/80 md:right-16 md:h-10 md:w-10"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsWatchlistOpen(true);
+              }}
+              aria-label="Manage watchlist"
+              type="button"
+            >
+              <ListPlus className="h-4 w-4 md:h-5 md:w-5" />
+            </button>
           </div>
         </div>
 
@@ -62,6 +84,21 @@ export default function MovieCard({ movie, setModelOpen }) {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={isWatchlistOpen}
+        onClose={() => setIsWatchlistOpen(false)}
+        title="Manage watchlists"
+        maxWidth="max-w-6xl"
+      >
+        <ManageWatchList
+          movie={movie}
+          watchlists={watchlists}
+          onCreateWatchlist={onCreateWatchlist}
+          onAddMovieToWatchlist={onAddMovieToWatchlist}
+          onDeleteWatchlist={onDeleteWatchlist}
+        />
+      </Modal>
     </>
   );
 }
