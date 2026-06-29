@@ -5,7 +5,7 @@ import Modal from "./Modal";
 import { useState } from "react";
 import ManageWatchList from "./ManageWatchList";
 import { ListPlus } from "lucide-react";
-
+import { useAuthContext } from "../context/AuthContext";
 export default function MovieCard({
   movie,
   setModelOpen,
@@ -17,14 +17,15 @@ export default function MovieCard({
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
   const favorite = isFavorite(movie.id);
   const [isWatchlistOpen, setIsWatchlistOpen] = useState(false);
-
+  const {user} = useAuthContext();
   async function onFavoriteClick(e) {
     try {
       e.preventDefault();
       if (favorite) removeFromFavorites(movie.id);
-      else addToFavorites(movie);
+      else 
+        addToFavorites(movie);
     } catch (error) {
-      console.log(error);
+      
 
       ErrorToast({ text: error.message });
       setModelOpen(true);
@@ -42,6 +43,7 @@ export default function MovieCard({
             loading="lazy"
           />
 
+         {user && <>
           <div className="absolute inset-0 flex flex-col justify-end bg-linear-to-b from-black/10 to-black/80 p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
             <button
               className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-[1.2rem] transition-colors duration-200 hover:bg-black/80 md:h-10 md:w-10 md:text-2xl ${
@@ -63,7 +65,7 @@ export default function MovieCard({
             >
               <ListPlus className="h-4 w-4 md:h-5 md:w-5" />
             </button>
-          </div>
+          </div></>}
         </div>
 
         <div className="bg-background-sec flex flex-1 flex-col gap-2 p-3 md:p-4">

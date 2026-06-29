@@ -151,7 +151,6 @@ export const AuthProvider = ({ children }) => {
         photoURL: "",
         favorites_id: [],
       });
-      // POPRAWNIE dla setDoc (musisz podać nazwę/ID listy):
       const listName = "Moje Ulubione";
       const listRef = doc(
         db,

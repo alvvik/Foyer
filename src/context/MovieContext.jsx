@@ -56,7 +56,6 @@ const [watchlists, setWatchlists] = useState([]);
    try {
       const docRef = doc(db, "users", user.uid);
       await updateDoc(docRef, { favorites_id: updatedFavorites });
-      console.log(`Dodano do ulubionych w DB:`, movie.title || movie.id);
     } catch (error) {
       console.error("Błąd zapisu ulubionego w DB:", error);
    }

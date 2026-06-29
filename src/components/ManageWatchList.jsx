@@ -22,7 +22,7 @@ export default function ManageWatchList() {
     setWatchListDescription("");
     setIsCreateOpen(false);
   };
-
+  
   return (
     <section className="rounded-3xl border border-sec/15 bg-background-sec p-6 text-text shadow-2xl">
       <div className="flex items-center justify-between flex-col md:grid md:grid-cols-2 gap-4">
