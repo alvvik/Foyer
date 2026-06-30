@@ -169,7 +169,7 @@ export default function AuthPage() {
           <div className="flex justify-center">
             <input
               type="submit"
-              className="px-8 py-2 bg-primary text-center w-3/4rounded-2xl font-bold my-2"
+              className="px-8 py-2 bg-primary text-center w-3/4 rounded-2xl font-bold my-2"
               value={
                 resetPassword
                   ? "Send password reset link"

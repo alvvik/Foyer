@@ -4,15 +4,12 @@ import { ErrorToast } from "../utils/toast";
 import Modal from "./Modal";
 import { useState } from "react";
 import ManageWatchList from "./ManageWatchList";
-import { ListPlus } from "lucide-react";
+import { ListPlus,Trash } from "lucide-react";
 import { useAuthContext } from "../context/AuthContext";
 export default function MovieCard({
   movie,
   setModelOpen,
-  watchlists = [],
-  onCreateWatchlist,
-  onAddMovieToWatchlist,
-  onDeleteWatchlist,
+  onClickAction = null
 }) {
   const { isFavorite, addToFavorites, removeFromFavorites } = useMovieContext();
   const favorite = isFavorite(movie.id);
@@ -44,9 +41,10 @@ export default function MovieCard({
           />
 
          {user && <>
-          <div className="absolute inset-0 flex flex-col justify-end bg-linear-to-b from-black/10 to-black/80 p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <div className="absolute inset-0 flex flex-col justify-end bg-linear-to-b from-black/10 to-black/80 p-4 opacity-0 transition-opacity duration-200 group-hover:opacity-100">   
+            <div className="absolute top-4 right-4 flex gap-2">
             <button
-              className={`absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-[1.2rem] transition-colors duration-200 hover:bg-black/80 md:h-10 md:w-10 md:text-2xl ${
+              className={`flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-[1.2rem] transition-colors duration-200 hover:bg-black/80 md:h-10 md:w-10 md:text-2xl ${
                 favorite ? "text-red-500" : "text-white"
               }`}
               onClick={onFavoriteClick}
@@ -55,7 +53,7 @@ export default function MovieCard({
             </button>
 
             <button
-              className="absolute right-14 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-white transition-colors duration-200 hover:bg-black/80 md:right-16 md:h-10 md:w-10"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-white transition-colors duration-200 hover:bg-black/80 md:h-10 md:w-10"
               onClick={(e) => {
                 e.preventDefault();
                 setIsWatchlistOpen(true);
@@ -65,6 +63,18 @@ export default function MovieCard({
             >
               <ListPlus className="h-4 w-4 md:h-5 md:w-5" />
             </button>
+              {onClickAction && (
+                <button
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 p-2 text-white transition-colors duration-200 hover:bg-black/80 md:h-10 md:w-10"
+                  onClick={onClickAction}
+                  aria-label="Remove from watchlist"
+                  type="button"
+                >
+                  <Trash className="h-4 w-4 md:h-5 md:w-5" />
+                </button>
+              )}
+            </div>
+            
           </div></>}
         </div>
 
@@ -95,10 +105,6 @@ export default function MovieCard({
       >
         <ManageWatchList
           movie={movie}
-          watchlists={watchlists}
-          onCreateWatchlist={onCreateWatchlist}
-          onAddMovieToWatchlist={onAddMovieToWatchlist}
-          onDeleteWatchlist={onDeleteWatchlist}
         />
       </Modal>
     </>

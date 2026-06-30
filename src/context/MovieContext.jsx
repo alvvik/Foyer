@@ -7,7 +7,8 @@ import {
   setDoc,
   collection,
   getDocs,
-  serverTimestamp
+  serverTimestamp,
+  deleteDoc
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useAuthContext } from "./AuthContext";
@@ -138,6 +139,7 @@ const [watchlists, setWatchlists] = useState([]);
         watchListName: name,
         watchListDesc: desc,
         createdAt: serverTimestamp(),
+        movies: []
       };
       await setDoc(docRef, newList)
     setWatchlists((prev) => [...prev, { id: name, ...newList }]);
@@ -147,6 +149,78 @@ const [watchlists, setWatchlists] = useState([]);
       console.error("Error creating watchlist:", err);
     }
   }
+
+  const addMovieToWatchlist = async (watchlistId, movie) => {
+    if (!user) return;
+    try {
+      const watchlistRef = doc(db, "users", user.uid, "watchlists", watchlistId);
+      const watchlistSnap = await getDoc(watchlistRef);
+      
+      if (!watchlistSnap.exists()) {
+        throw new Error("Watchlist not found");
+      }
+
+      const watchlistData = watchlistSnap.data();
+      const currentMovies = watchlistData.movies || [];
+      
+      if (currentMovies.some((m) => m.id === movie.id)) {
+        return; // Movie already in watchlist
+      }
+
+      const updatedMovies = [...currentMovies, movie];
+      await updateDoc(watchlistRef, { movies: updatedMovies });
+      
+      setWatchlists((prev) =>
+        prev.map((list) =>
+          list.id === watchlistId
+            ? { ...list, movies: updatedMovies }
+            : list
+        )
+      );
+    } catch (err) {
+      console.error("Error adding movie to watchlist:", err);
+    }
+  };
+
+  const removeMovieFromWatchlist = async (watchlistId, movieId) => {
+    if (!user) return;
+    try {
+      const watchlistRef = doc(db, "users", user.uid, "watchlists", watchlistId);
+      const watchlistSnap = await getDoc(watchlistRef);
+      
+      if (!watchlistSnap.exists()) {
+        throw new Error("Watchlist not found");
+      }
+
+      const watchlistData = watchlistSnap.data();
+      const currentMovies = watchlistData.movies || [];
+      const updatedMovies = currentMovies.filter((m) => m.id !== movieId);
+      
+      await updateDoc(watchlistRef, { movies: updatedMovies });
+      
+      setWatchlists((prev) =>
+        prev.map((list) =>
+          list.id === watchlistId
+            ? { ...list, movies: updatedMovies }
+            : list
+        )
+      );
+    } catch (err) {
+      console.error("Error removing movie from watchlist:", err);
+    }
+  };
+
+  const deleteWatchlist = async (watchlistId) => {
+    if (!user) return;
+    try {
+      const watchlistRef = doc(db, "users", user.uid, "watchlists", watchlistId);
+      await deleteDoc(watchlistRef);
+      
+      setWatchlists((prev) => prev.filter((list) => list.id !== watchlistId));
+    } catch (err) {
+      console.error("Error deleting watchlist:", err);
+    }
+  };
 
   const value = {
     favorites,
@@ -160,6 +234,9 @@ const [watchlists, setWatchlists] = useState([]);
     
     watchlists,
     createWatchlist,
+    addMovieToWatchlist,
+    removeMovieFromWatchlist,
+    deleteWatchlist,
   };
 
   return (
