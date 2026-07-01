@@ -1,12 +1,10 @@
 ## TODO
 
 - [ ] AI chatbot in the corner
-- [ ] "Watch later" and "Watch list" buttons (Firebase logic)
-
+- [ ] Add ability to add profile picture
 ## In Progress
-
 ## Done
-
+- [x] "Watch later" and "Watch list" buttons (Firebase logic)
 - [x] add favorites site style
 - [x] Move favorites from localstorage to Firebase account
 - [ x ] add Mobie providers in movie detail (mobile and desktop)

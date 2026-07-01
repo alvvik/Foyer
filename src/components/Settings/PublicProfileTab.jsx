@@ -31,13 +31,14 @@ export default function PublicProfileTab({
             )}
           </div>
           <div className="flex flex-wrap gap-3">
-            <label className="text-xs font-medium bg-background px-4 py-2.5 rounded text-text border border-sec/30 hover:border-primary cursor-pointer transition-colors">
+            <label className="text-xs font-medium bg-background px-4 py-2.5 rounded text-text border border-sec/30 hover:border-primary transition-colors cursor-not-allowed">
               Upload New Picture
               <input
                 type="file"
                 accept="image/*"
                 className="hidden"
                 onChange={handleFileChange}
+                disabled
               />
             </label>
             {profilePic && (
