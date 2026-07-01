@@ -58,7 +58,7 @@ Building this project helped me master:
 - **AI Agents**: Using AI to help my code being clearner and modern
 ##  Live Demo
 
-SOON
+[Click here](https://foyer.alvv.ovh/)
 
 
 
